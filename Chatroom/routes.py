@@ -15,5 +15,5 @@ main_bp = Blueprint(
 
 @main_bp.route("/dashboard", methods=["GET", "POST"])
 def dashboard(): 
-    username = request.form.get("username")
+    username = "Anonymous"
     return render_template("dashboard.html", username=username)
