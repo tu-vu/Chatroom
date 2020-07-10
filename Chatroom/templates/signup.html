@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block pagestyles %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/home.css')}}">
+{% endblock %}
+
+{% block title %} Account Login - Moviebia {% endblock %}
+
+{% block body %}
+<div id="alert">
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor%}  
+</div>
+
+<form action="{{ url_for('auth_bp.signup') }}" method="post" id="signup" class="auth-inner">
+    <h3>Sign Up</h3>
+    <hr>
+    
+    {{ form.csrf_token }}
+
+    <fieldset class="form-group username">
+        {{ form.username.label }}
+        {{ form.username(class="form-control", placeholder = 'John Smith') }}
+        {% if form.username.errors %}
+            <ul class="errors" style="color: red">
+                {% for error in form.username.errors %}
+                    <li>{{  error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </fieldset>  
+
+    <fieldset class="form-group email">
+        {{ form.email.label }}
+        {{ form.email(class="form-control", placeholder='youremail@example.com') }}
+        {% if form.email.errors %}
+            <ul class="errors" style="color: red">
+                {% for error in form.email.errors %}
+                    <li>{{  error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </fieldset>  
+
+     <fieldset class="form-group password">
+        {{ form.password.label }}
+        {{ form.password(class="form-control", placeholder='Enter password') }}
+        {% if form.password.errors %}
+            <ul class="errors" style="color: red">
+                {% for error in form.password.errors %}
+                    <li>{{  error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </fieldset>  
+
+     <fieldset class="form-group confirm">
+        {{ form.confirm.label }}
+        {{ form.confirm(class="form-control") }}
+        {% if form.confirm.errors %}
+            <ul class="errors" style="color: red">
+                {% for error in form.confirm.errors %}
+                    <li>{{  error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </fieldset>
+
+    {{ form.submit(class="btn btn-primary btn-block") }}
+
+    <small id="emailHelp" class="form-text text-muted">Already have an account? <a href="{{ url_for('auth_bp.login') }}">Log in.</a></small>
+</form>
+{% endblock %}
