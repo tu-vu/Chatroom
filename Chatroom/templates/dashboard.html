@@ -1,10 +1,42 @@
 {% extends "layout.html" %}
 
 {% block pagestyles %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
 {% endblock %}
 
 {% block title %} Dashboard {% endblock %}
 
 {% block body %}
-    <h1>Welcome {{ username }} to Dashboard! This is where all the magic happens</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="channels" class="col-2">
+                <h1>Channels</h1>
+                <ul>
+                    <li>Channel 1</li>
+                    <li>Channel 2</li>
+                    <li>Channel 3</li>
+                    <li>Channel 4</li>
+                </ul>
+            </div>
+            <div id="chat" class="col-8">
+                <div id="messages">
+                    <h3>Messages will appear here!</h3>
+                </div>
+                <form class="form-inline">
+                    <input id="message" type="text">
+                    <input id="send" type="button" value="Send">
+                </form>
+            </div>            
+            <div id="members" class="col-2">
+                <h1>Members in channel</h1>
+                <ul>
+                    <li>Member 1</li>
+                    <li>Member 2</li>
+                    <li>Member 3</li>
+                    <li>Member 4</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
