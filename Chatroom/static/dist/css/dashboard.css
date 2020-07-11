@@ -1,0 +1,33 @@
+html, body, .container-fluid, .row {
+    height: 100%;
+}
+
+.container-fluid {
+    width: 100%;
+}
+
+.col-2 {
+    color: white;
+}
+
+#channels {
+    background-color: #6700bf;
+}
+
+#members {
+    background-color: #001eff;
+}
+
+form #message {
+    width: 90%;
+}
+
+form #send {
+    width: 10%;
+}
+
+#messages {
+    overflow-y: auto;
+    height: 675px;
+}
+
