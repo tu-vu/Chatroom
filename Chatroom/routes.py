@@ -15,5 +15,9 @@ main_bp = Blueprint(
 
 @main_bp.route("/dashboard", methods=["GET", "POST"])
 def dashboard(): 
-    username = "Anonymous"
-    return render_template("dashboard.html", username=username)
+
+    # # Check if user just sent a message
+    # if request.method == "POST":
+    #     request.form.get("message")
+
+    return render_template("dashboard.html")
