@@ -1,5 +1,26 @@
 {% extends "layout.html" %}
 
+{% block javascript %}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector("#new-message").onsubmit = function() {
+
+                // Create new message tag
+                const p = document.createElement('p');
+
+                // Set content of message tag
+                p.innerHTML = document.querySelector("#message").value;
+
+                // Append new message to messages
+                document.querySelector("#messages").append(p);
+
+                // Stop page from reloading
+                return false;
+            };
+        });
+    </script>
+{% endblock %}
+
 {% block pagestyles %}
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
 {% endblock %}
@@ -22,9 +43,9 @@
                 <div id="messages">
                     <h3>Messages will appear here!</h3>
                 </div>
-                <form class="form-inline">
-                    <input id="message" type="text">
-                    <input id="send" type="button" value="Send">
+                <form id="new-message" class="form-inline">
+                    <input id="message" type="text" name="message">
+                    <input id="send" type="submit" value="Send">
                 </form>
             </div>            
             <div id="members" class="col-2">
