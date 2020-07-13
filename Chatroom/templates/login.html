@@ -14,14 +14,15 @@
         </div>
     {% endfor%}  
 </div>
-
-<form action="{{ url_for('auth_bp.login') }}" method="post">
-    <h3>Log In</h3>
+ 
+<div class="card-body px-lg-5 pt-0" style="width: 50%; height: 100px; margin-top: 200px; margin-left: 450px">
+<form action="{{ url_for('auth_bp.login') }}" method="post" class="text-center border p-4">
+    <h3 class="h4 mb-4">Log In</h3>
     <hr>
 
     {{ form.csrf_token }}
 
-    <fieldset class="form-group email">
+    <fieldset class="form-group email mb-4">
         {{ form.email.label }}
         {{ form.email(class="form-control", placeholder='youremail@example.com') }}
         {% if form.email.errors %}
@@ -33,7 +34,7 @@
         {% endif %}
     </fieldset>  
 
-     <fieldset class="form-group password">
+     <fieldset class="form-group password mb-4">
         {{ form.password.label }}
         {{ form.password(class="form-control", placeholder='Enter password') }}
         {% if form.password.errors %}
@@ -49,4 +50,6 @@
 
     <small id="emailHelp" class="form-text text-muted">Don't have an account? <a href="{{ url_for('auth_bp.signup') }}">Sign up.</a></small>
 </form>
+</div>
+
 {% endblock %}
