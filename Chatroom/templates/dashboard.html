@@ -1,77 +1,50 @@
 {% extends "layout.html" %}
 
-{% block javascript %}
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector("#send").onclick = function() {
-
-                 // Create new message tag
-                const p = document.createElement('p');
-
-                // Set content of message tag
-                p.innerHTML = document.querySelector("#message").value;
-
-                // Append new message to messages
-                document.querySelector("#messages").append(p);
-
-                // Stop page from reloading
-                return false;
-                
-            };
-            document.querySelector("#delete").onclick = function() {
-
-                 // Get the last message tag
-                const p = document.querySelector('#messages').lastElementChild;
-
-                // Set content of last message tag
-                p.remove();
-
-                // Stop page from reloading
-                return false;
-            };
-
-        });
-    </script>
-{% endblock %}
-
 {% block pagestyles %}
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
 {% endblock %}
 
-{% block title %} Dashboard {% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{{ url_for('static', filename='src/js/dashboard.js') }}"></script>
+{% endblock %}
+
+{% block title %} Dashboard - Messagetastic {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
+
         <div class="row">
-            <div id="channels" class="col-2">
+
+            <div id="left" class="col-2">
                 <h1>Channels</h1>
-                <ul>
-                    <li>Channel 1</li>
-                    <li>Channel 2</li>
-                    <li>Channel 3</li>
-                    <li>Channel 4</li>
-                </ul>
+                <!-- Form to create new channel -->
+                <form id="new_channel">
+                    <input type="text" id="channel_name" placeholder="Channel name">
+                    <input type="submit" value="Create">
+                </form>
+                <div id="channels">
+                </div>
             </div>
-            <div id="chat" class="col-8">
+
+            <div id="mid" class="col-8">
                 <div id="messages">
                     <h3>Messages will appear here!</h3>
                 </div>
                 <form id="new-message" class="form-inline">
                     <input id="message" type="text" name="message">
                     <input id="send" type="submit" value="Send">
-                    <input id="delete" type="submit" value="Delete">
+                    <!-- <input id="delete" type="submit" value="Delete"> -->
                 </form>
-            </div>            
-            <div id="members" class="col-2">
+            </div>       
+
+            <div id="right" class="col-2">
                 <h1>Members in channel</h1>
                 <ul>
-                    <li>Member 1</li>
-                    <li>Member 2</li>
-                    <li>Member 3</li>
-                    <li>Member 4</li>
                 </ul>
             </div>
+
         </div>
+
     </div>
 
 {% endblock %}
