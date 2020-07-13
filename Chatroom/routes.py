@@ -14,10 +14,11 @@ main_bp = Blueprint(
 )
 
 @main_bp.route("/dashboard", methods=["GET", "POST"])
+@login_required
 def dashboard(): 
     return render_template("dashboard.html")
 
-''' CREATE NEW CHANNEL '''
+### CREATE NEW CHANNEL ###
 @main_bp.route("/create", methods=["POST"])
 def create():
     channel_name = request.form.get("channel_name")
@@ -27,9 +28,16 @@ def create():
 
     # Only add new channel
     if existing_channel is None:
-        new_channel = Channel(name=channel_name)
-        db.session.add(new_channel)
-        db.session.commit()
+        # Create new channel associated with current_user
+        current_user.create_channel(channel_name)
         return jsonify({"success": True})
     else:
         return jsonify({"success": False})
+
+### LOAD ALL CHANNELS ASSOCIATING WITH USER ###
+@main_bp.route("/load", methods=["GET"])
+def load():
+    # Get a JSON serialized version of channels(basically a list of strings)
+    channels = [channel.name for channel in current_user.channels]
+
+    return jsonify({"channels": channels})
