@@ -10,11 +10,11 @@ html, body, .container-fluid, .row {
     color: white;
 }
 
-#channels {
+#left {
     background-color: #6700bf;
 }
 
-#members {
+#right {
     background-color: #001eff;
 }
 
