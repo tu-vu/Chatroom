@@ -18,6 +18,6 @@ class Config:
     TEMPLATES_FOLDER = "templates"
 
     # Database
-    # SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
