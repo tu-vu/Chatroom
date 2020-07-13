@@ -19,28 +19,27 @@ def signup():
     GET requests serve sign-up page.
     POST requests validate form & user creation.
     """
-    # form = SignupForm()
-    # if form.validate_on_submit():
-    #     # Users fill form correctly
-    #     # Check if email already exists
-    #     existing_user = User.query.filter_by(email=form.email.data).first()
-    #     if existing_user is None:
-    #         # Check if username already exists
-    #         existing_username = User.query.filter_by(username=form.username.data).first()
-    #         if existing_username is None:
-    #             user = User(username=form.username.data, 
-    #                         email=form.email.data, 
-    #                         password=form.password.data)
-    #             db.session.add(user)
-    #             db.session.commit() # Create new user
-    #             login_user(user) # Log in as newly created user - magically!
-    #             # Go to movie dashboard page
-    #             return redirect(url_for('main_bp.dashboard'))
-    #         flash("Username already exists!")
-    #     else:
-    #         flash("A user already exists with that email address.")
-    # return render_template("signup.html", form=form)
-    return render_template("signup.html")
+    form = SignupForm()
+    if form.validate_on_submit():
+        # Users fill form correctly
+        # Check if email already exists
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user is None:
+            # Check if username already exists
+            existing_username = User.query.filter_by(username=form.username.data).first()
+            if existing_username is None:
+                user = User(username=form.username.data, 
+                            email=form.email.data, 
+                            password=form.password.data)
+                db.session.add(user)
+                db.session.commit() # Create new user
+                login_user(user) # Log in as newly created user - magically!
+                # Go to movie dashboard page
+                return redirect(url_for('main_bp.dashboard'))
+            flash("Username already exists!")
+        else:
+            flash("A user already exists with that email address.")
+    return render_template("signup.html", form=form)
 
 @auth_bp.route("/", methods=["GET", "POST"])
 def login():
@@ -50,23 +49,22 @@ def login():
     POST requests validate and redirect user to dashboard page
     """
     # Bypass if user is already logged in 
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('main_bp.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main_bp.dashboard'))
 
-    # form = LoginForm()
-    # # Validate login attempt
-    # if form.validate_on_submit():
-    #     user = User.query.filter_by(email=form.email.data).first()
-    #     # If user exists in our database and password matches
-    #     if user and user.password == form.password.data:
-    #         login_user(user) # Log in as existing user
-    #         return redirect(url_for('main_bp.dashboard'))
-    #     elif not user:
-    #         flash("Account does not exists!")
-    #     else:
-    #         flash("Password does not match!")
-    # return render_template("login.html", form=form)
-    return render_template("login.html")
+    form = LoginForm()
+    # Validate login attempt
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        # If user exists in our database and password matches
+        if user and user.password == form.password.data:
+            login_user(user) # Log in as existing user
+            return redirect(url_for('main_bp.dashboard'))
+        elif not user:
+            flash("Account does not exists!")
+        else:
+            flash("Password does not match!")
+    return render_template("login.html", form=form)
 
 @auth_bp.route("/logout")
 @login_required
