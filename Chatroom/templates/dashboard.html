@@ -37,9 +37,8 @@
             </div>       
 
             <div id="right" class="col-2">
-                <h1>Members in channel</h1>
-                <ul>
-                </ul>
+                <h1>Members</h1>
+                <form action="{{ url_for('auth_bp.logout') }}"  method="get"><button class="btn btn-info btn-block">Log out</button></form>
             </div>
 
         </div>
