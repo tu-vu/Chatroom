@@ -14,22 +14,32 @@
                 // Append new message to messages
                 document.querySelector("#messages").append(p);
 
-                // Stop page from reloading
-                return false;
-                
-            };
-            document.querySelector("#delete").onclick = function() {
+                // Adding delete button for each message
+                const but = document.createElement('button');
 
-                 // Get the last message tag
-                const p = document.querySelector('#messages').lastElementChild;
+                //set content of the button
+                but.innerHTML = "[x]";
 
-                // Set content of last message tag
-                p.remove();
+                // Append the button to the div
+                document.querySelector("#messages").append(but);
 
                 // Stop page from reloading
                 return false;
             };
 
+            document.querySelector("#messages").onclick = function(event) {
+
+                 let targetId = event.target;
+                 if(targetId.tagName != "BUTTON") return;
+
+                 remove(targetId);
+            };
+
+            function remove(target){
+              let sibling = target.previousSibling;
+              sibling.remove();
+              target.remove();
+            }
         });
     </script>
 {% endblock %}
@@ -54,12 +64,11 @@
             </div>
             <div id="chat" class="col-8">
                 <div id="messages">
-                    <h3>Messages will appear here!</h3>
+                    <h3 id="direction">Messages will appear here!</h3>
                 </div>
                 <form id="new-message" class="form-inline">
                     <input id="message" type="text" name="message">
                     <input id="send" type="submit" value="Send">
-                    <input id="delete" type="submit" value="Delete">
                 </form>
             </div>            
             <div id="members" class="col-2">
