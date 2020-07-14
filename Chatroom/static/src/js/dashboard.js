@@ -15,6 +15,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
+    // Set create button to disabled as default
+    document.querySelector("#send").disabled = true;
+
+    // When user type anything in input bar, enable create button
+    document.querySelector("#message").onkeyup = function() {
+        // If input bar is not empty, enable button
+        if (document.querySelector("#message").value.length > 0) {
+            document.querySelector("#send").disabled = false;
+        } else {
+            document.querySelector("#send").disabled = true;
+        }
+    };
+
     // CREATE NEW CHANNEL
     document.querySelector("#new_channel").onsubmit = function() {
         // Initialize a new request
@@ -52,26 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return false;
     };
 
-    // WHEN USER CLICK ONE OF CHANNEL
-    document.querySelector("#channels").onclick = function(div_area) {
-        // div_area.target is the clicked element!
-        
-        // Only apply change if user click another button
-        if (div_area.target && div_area.target.nodeName == "BUTTON") {
-            // Get currently clicked button
-            const active_button = document.querySelector(".active");
-
-            // No button is clicked yet
-            if (active_button != null) {
-                // Remove clicked status
-                active_button.className = active_button.className.replace(" active", "");
-            }
-
-            // Set the clicked button to active until another button is clicked
-            div_area.target.className += " active";
-        }
-    };
-
     // SEND A NEW MESSAGE
     document.querySelector("#send").onclick = function() {
         // Create new message tag
@@ -94,6 +87,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Stop page from reloading
         return false;
+    };
+
+    // WHEN USER CLICK ONE OF CHANNEL
+    document.querySelector("#channels").onclick = function(div_area) {
+        // div_area.target is the clicked element!
+
+        // Only apply change if user click another button
+        if (div_area.target && div_area.target.nodeName == "BUTTON") {
+            // Get currently clicked button
+            const active_button = document.querySelector(".active");
+
+            // No button is clicked yet
+            if (active_button != null) {
+                // Remove clicked status
+                active_button.className = active_button.className.replace(" active", "");
+            }
+
+            // Set the clicked button to active until another button is clicked
+            div_area.target.className += " active";
+        }
     };
 
     // REMOVE A MESSAGE
