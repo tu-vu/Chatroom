@@ -1,15 +1,24 @@
-
-// Look into this bug: DOM.readyState
-
-
 document.addEventListener("DOMContentLoaded", function() {
     // Load all channels associating with user before DOM is loaded
     load_channels();
 
+    // Set create button to disabled as default
+    document.querySelector("#create").disabled = true;
+
+    // When user type anything in input bar, enable create button
+    document.querySelector("#channel_name").onkeyup = function() {
+        // If input bar is not empty, enable button
+        if (document.querySelector("#channel_name").value.length > 0) {
+            document.querySelector("#create").disabled = false;
+        } else {
+            document.querySelector("#create").disabled = true;
+        }
+    };
+
     // CREATE NEW CHANNEL
     document.querySelector("#new_channel").onsubmit = function() {
         // Initialize a new request
-        const request = new XMLHttpRequest(); 
+        const request = new XMLHttpRequest();
         request.open('POST', '/create');
 
         const channel_name = document.querySelector("#channel_name").value;
@@ -44,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // WHEN USER CLICK ONE OF CHANNEL
-    document.querySelector("#channels").addEventListener("click", function(e) {
-        // e.target is the clicked element!
-
+    document.querySelector("#channels").onclick = function(div_area) {
+        // div_area.target is the clicked element!
+        
         // Only apply change if user click another button
-        if (e.target && e.target.nodeName == "BUTTON") {
+        if (div_area.target && div_area.target.nodeName == "BUTTON") {
             // Get currently clicked button
             const active_button = document.querySelector(".active");
 
@@ -59,9 +68,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Set the clicked button to active until another button is clicked
-            e.target.className += " active";
+            div_area.target.className += " active";
         }
-    });
+    };
 
     // SEND A NEW MESSAGE
     document.querySelector("#send").onclick = function() {
