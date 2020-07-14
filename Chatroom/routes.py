@@ -43,7 +43,9 @@ def load():
     return jsonify({"channels": channels})
 
 ### SEND A NEW MESSAGE IN A CHANNEL ###
-# @main_bp.route("/send_message", method=["POST"])
-# def send_message():
-#     pass
+@main_bp.route("/send_message", methods=["POST"])
+def send_message():
 
+    message = request.form.get("message")
+
+    return jsonify({"message": message})
