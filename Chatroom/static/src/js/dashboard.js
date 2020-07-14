@@ -1,11 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Load all channels associating with user before DOM is loaded
+    // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
 
-    // Set create button to disabled as default
+    // DISABLE CREATE BUTTON BY DEFAULT
     document.querySelector("#create").disabled = true;
 
-    // When user type anything in input bar, enable create button
+    // DISABLE SEND BUTTON BY DEFAULT
+    document.querySelector("#send").disabled = true;
+
+    // SET MESSAGES CONTENT BY DEFAULT(AKA WHEN NO CHANNEL IS SELECTED)
+    document.querySelector("#messages").innerHTML = "<h3>Here is the dashboard, when no channel is selected</h3>";
+
+    // ENABLE CREATE BUTTON WHEN USER TYPE SOMETHING
     document.querySelector("#channel_name").onkeyup = function() {
         // If input bar is not empty, enable button
         if (document.querySelector("#channel_name").value.length > 0) {
@@ -15,10 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Set create button to disabled as default
-    document.querySelector("#send").disabled = true;
-
-    // When user type anything in input bar, enable create button
+    // ENABLE SEND BUTTON WHEN USER TYPE SOMETHING
     document.querySelector("#message").onkeyup = function() {
         // If input bar is not empty, enable button
         if (document.querySelector("#message").value.length > 0) {
@@ -44,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // If creation of new channel is successful
             if(data.success) {
                 const button = document.createElement('button');
+                button.id = channel_name;
                 button.className += "channel";
                 button.innerHTML = channel_name;
 
@@ -89,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return false;
     };
 
-    // WHEN USER CLICK ONE OF CHANNEL
+    // USER CLICKED ONE OF CHANNEL
     document.querySelector("#channels").onclick = function(div_area) {
         // div_area.target is the clicked element!
 
@@ -106,6 +110,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Set the clicked button to active until another button is clicked
             div_area.target.className += " active";
+
+            console.log(document.querySelector("#messages").innerHTML);
+
+            // Update messages history with new channel
+            document.querySelector("#messages").innerHTML = "<h3>Here is messages history for " + `${div_area.target.id}` + "</h3>";
         }
     };
 
@@ -129,11 +138,12 @@ function load_channels() {
         const data = JSON.parse(request.responseText);
 
         // Traverse and print all channels
-        for (channel of data.channels) {
+        for (channel_name of data.channels) {
             // Create a button
             const button = document.createElement('button');
+            button.id = channel_name
             button.className += "channel";
-            button.innerHTML = channel;
+            button.innerHTML = channel_name;
 
             // Add button to field
             document.querySelector("#channels").append(button);
