@@ -57,7 +57,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Set the clicked button to active until another button is clicked
-        e.target.className += " active";
+        if (e.target && e.target.nodeName == "BUTTON") {
+            e.target.className += " active";
+        }
     });
 
     // SEND A NEW MESSAGE
