@@ -27,8 +27,8 @@ class User(UserMixin, db.Model):
     # Declare a relationship between User and Message
     messages = db.relationship("Message", backref="user",lazy=True)
 
-    def write_message(self, text, channel_id):
-        message = Message(text=text, author=self.username, channel_id=channel_id)
+    def write_message(self, message, channel_id):
+        message = Message(message=message, author=self.username, channel_id=channel_id)
         db.session.add(message)
         db.session.commit()
 
@@ -55,8 +55,8 @@ class Message(db.Model):
     # an easy way to reference each message
     id = db.Column(db.Integer, primary_key=True)
 
-    # Typed message from users
-    text = db.Column(db.String, nullable=False)
+    # Message
+    message = db.Column(db.String, nullable=False)
 
     # Name of author
     author = db.Column(db.String, db.ForeignKey('users.username') , nullable=False)
