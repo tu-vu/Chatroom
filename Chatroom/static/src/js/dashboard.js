@@ -47,17 +47,18 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#channels").addEventListener("click", function(e) {
         // e.target is the clicked element!
 
-        // Get currently clicked button
-        const active_button = document.querySelector(".active");
-
-        // No button is clicked yet
-        if (active_button != null) {
-            // Remove clicked status
-            active_button.className = active_button.className.replace(" active", "");
-        }
-
-        // Set the clicked button to active until another button is clicked
+        // Only apply change if user click another button
         if (e.target && e.target.nodeName == "BUTTON") {
+            // Get currently clicked button
+            const active_button = document.querySelector(".active");
+
+            // No button is clicked yet
+            if (active_button != null) {
+                // Remove clicked status
+                active_button.className = active_button.className.replace(" active", "");
+            }
+
+            // Set the clicked button to active until another button is clicked
             e.target.className += " active";
         }
     });
