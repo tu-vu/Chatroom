@@ -71,23 +71,53 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // SEND A NEW MESSAGE
     document.querySelector("#send").onclick = function() {
-        // Create new message tag
-        const p = document.createElement('p');
+        // User can only send message while in a channel
+        const active_channel = document.querySelector(".active");
 
-        // Set content of message tag
-        p.innerHTML = document.querySelector("#message").value;
+        if (active_channel == null) {
+            // User has made no selection for channel -> Display error message
+            alert("Sorry, You must select a channel first!");
+            return false;
+        }
 
-        // Append new message to messages
-        document.querySelector("#messages").append(p);
+        // Retrieve message typed by user 
+        const message = document.querySelector("#message").value;
 
-        // Adding delete button for each message
-        const button = document.createElement('button');
+        // Initialize a new request
+        const request = new XMLHttpRequest();
+        request.open("POST", "/send_message");
 
-        //set content of the button
-        button.innerHTML = "[x]";
+        // Callback function when request completes
+        request.onload = function() {
+            const data = JSON.parse(request.responseText);
 
-        // Append the button to the div
-        document.querySelector("#messages").append(button);
+            // Create new message tag
+            const p = document.createElement('p');
+
+            // Set content of message tag
+            p.innerHTML = data.message;
+
+            // Append new message to messages
+            document.querySelector("#messages").append(p);
+
+            // Adding delete button for each message
+            const button = document.createElement('button');
+
+            //set content of the button
+            button.innerHTML = "[x]";
+
+            // Append the button to the div
+            document.querySelector("#messages").append(button);
+        };
+
+        // Add data to send with request
+        const data = new FormData();
+        data.append("message", message);
+
+        // Retrieve selected channel_id
+
+        // Send request 
+        request.send(data);
 
         // Stop page from reloading
         return false;
@@ -114,16 +144,16 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(document.querySelector("#messages").innerHTML);
 
             // Update messages history with new channel
-            document.querySelector("#messages").innerHTML = "<h3>Here is messages history for " + `${div_area.target.id}` + "</h3>";
+            document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${div_area.target.id} </h3>`;
         }
     };
 
     // REMOVE A MESSAGE
     document.querySelector("#messages").onclick = function(event) {
-     let targetId = event.target;
-     if(targetId.tagName != "BUTTON") return;
+        let targetId = event.target;
+        if(targetId.tagName != "BUTTON") return;
 
-     remove(targetId);
+        remove(targetId);
     };
 });
 
