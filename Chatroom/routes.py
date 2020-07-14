@@ -41,3 +41,9 @@ def load():
     channels = [channel.name for channel in current_user.channels]
 
     return jsonify({"channels": channels})
+
+### SEND A NEW MESSAGE IN A CHANNEL ###
+# @main_bp.route("/send_message", method=["POST"])
+# def send_message():
+#     pass
+
