@@ -2,8 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
 
-    // SET UP DEFAULT CONTENT FOR DASHBOARD(AKA WHEN NO CHANNEL IS SELECTED)
+    // SET UP DEFAULT CONTENT FOR DASHBOARD
     document.querySelector("#messages").innerHTML = "<h3>Here is the dashboard, when no channel is selected</h3>";
+
+    // HIDE MESSAGE FORM BY DEFAULT
+    document.querySelector("#new_message").style.display = "none";
 
     // DISABLE SUBMIT BUTTONS BY DEFAULT
     document.querySelectorAll("input[type='submit']").forEach(function(button) {
@@ -70,17 +73,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // SEND A NEW MESSAGE
     document.querySelector("#new_message").onsubmit = function() {
-        // User can only send message while in a channel
-        const active_channel = document.querySelector(".active");
-
-        if (active_channel == null) {
-            // User has made no selection for channel -> Display error message
-            alert("Sorry, You must select a channel first!");
-            return false;
-        }
-
         // Retrieve message typed by user 
         const message = document.querySelector("#message").value;
+
+        // Retrieve selected channel
+        const active_channel = document.querySelector(".active");
 
         // Clear input bar
         document.querySelector("#message").value = "";
@@ -130,12 +127,15 @@ document.addEventListener("DOMContentLoaded", function() {
         // div_area.target is the clicked element!
 
         // Only apply changes if user click another button
-        if (div_area.target && div_area.target.nodeName == "BUTTON") {
-            // Get currently clicked button
+        if (div_area.target && div_area.target.nodeName === "BUTTON") {
+            // Show message form
+            document.querySelector("#new_message").style.display = "";
+
+            // Get previously clicked button
             const active_button = document.querySelector(".active");
 
             // No button is clicked yet
-            if (active_button != null) {
+            if (active_button !== null) {
                 // Remove clicked status
                 active_button.className = active_button.className.replace(" active", "");
             }
@@ -144,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function() {
             div_area.target.className += " active";
 
             // LOAD MESSAGE HISTORY OF THE CHANNEL
-
             // Initialize a new request
             const request = new XMLHttpRequest();
             request.open("POST", "/load_messages")
@@ -165,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Adding delete button for each message
                     const button = document.createElement('button');
 
-                    //set content of the button
+                    //Set content of the button
                     button.innerHTML = "[x]";
 
                     // Append the button to the div
@@ -188,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // REMOVE A MESSAGE
     document.querySelector("#messages").onclick = function(event) {
         let targetId = event.target;
-        if(targetId.tagName != "BUTTON") return;
+        if(targetId.tagName !== "BUTTON") return;
 
         targetId.previousSibling.remove();
         targetId.remove();
