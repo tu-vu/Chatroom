@@ -48,13 +48,13 @@ def add_message():
     message = request.form.get("message")
     channel_name = request.form.get("channel_name")
 
-    # Get channel info
-    channel = Channel.query.filter_by(name=channel_name).first()
+    # Get channel id
+    channel_id = Channel.query.filter_by(name=channel_name).first().id
 
     # Add message to database
-    current_user.send_message(message=message, channel_id=channel.id)
+    timestamp = current_user.send_message(message=message, channel_id=channel_id)
 
-    return jsonify({"message": message})
+    return jsonify({"author": current_user.username, "timestamp": timestamp})
 
 ### LOAD MESSAGE HISTORY OF A CHANNEL ###
 @main_bp.route("/load_messages", methods=["POST"])
@@ -69,12 +69,12 @@ def load_messages():
     # Get a JSON serialized version of message history from database
     for message in channel.messages:
         # Initialize a JSON object
-        msg = dict()
-        msg["message"] = message.message
-        msg["author"] = message.author
-        msg["timestamp"] = message.timestamp
+        msg = {"message": message.message,
+               "author": message.author,
+               "timestamp": message.timestamp 
+            }
 
-        # Append it to our array
+        # Append message to array
         messages.append(msg)
 
     return jsonify({"channel_name": channel_name, "messages": messages})
