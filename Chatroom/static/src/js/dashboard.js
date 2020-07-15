@@ -31,7 +31,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const request = new XMLHttpRequest();
         request.open('POST', '/add_channel');
 
+        // Retrieve channel name typed by user 
         const channel_name = document.querySelector("#channel_name").value;
+
+        // Clear input bar
+        document.querySelector("#channel_name").value = "";
+        document.querySelector("#create").disabled = true;
 
         // When the request is loaded successfully
         request.onload = function() {
@@ -64,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // SEND A NEW MESSAGE
-    document.querySelector("#send").onclick = function() {
+    document.querySelector("#new_message").onsubmit = function() {
         // User can only send message while in a channel
         const active_channel = document.querySelector(".active");
 
@@ -156,6 +161,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     p.innerHTML = `${message.author}: ${message.message} [${message.timestamp}]`;
 
                     document.querySelector("#messages").append(p);
+
+                    // Adding delete button for each message
+                    const button = document.createElement('button');
+
+                    //set content of the button
+                    button.innerHTML = "[x]";
+
+                    // Append the button to the div
+                    document.querySelector("#messages").append(button);
                 }
             };
 
@@ -174,11 +188,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // REMOVE A MESSAGE
     document.querySelector("#messages").onclick = function(event) {
         let targetId = event.target;
-        if(targetId.nodeName != "BUTTON") return;
+        if(targetId.tagName != "BUTTON") return;
 
-        let sibling = targetId.previousSibling;
-        sibling.remove();
-        target.remove();
+        targetId.previousSibling.remove();
+        targetId.remove();
     };
 });
 

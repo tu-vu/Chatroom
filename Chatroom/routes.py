@@ -54,7 +54,7 @@ def add_message():
     # Add message to database
     timestamp = current_user.send_message(message=message, channel_id=channel_id)
 
-    return jsonify({"author": current_user.username, "timestamp": timestamp})
+    return jsonify({"author": current_user.username, "timestamp": timestamp.strftime('%H:%M')})
 
 ### LOAD MESSAGE HISTORY OF A CHANNEL ###
 @main_bp.route("/load_messages", methods=["POST"])
@@ -71,7 +71,7 @@ def load_messages():
         # Initialize a JSON object
         msg = {"message": message.message,
                "author": message.author,
-               "timestamp": message.timestamp 
+               "timestamp": message.timestamp.strftime('%H:%M')
             }
 
         # Append message to array
