@@ -1,6 +1,6 @@
 """ Database models. """
 from .import db
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_login import UserMixin
 
 # Create an association table for many-to-many relationship between users and channels
@@ -69,4 +69,4 @@ class Message(db.Model):
 
     # Time when the message was made
     # No need to worry about this since we already default it to "now"
-    timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
+    timestamp = db.Column(db.DateTime(), default=datetime.now, index=True)
