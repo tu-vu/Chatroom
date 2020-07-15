@@ -2,40 +2,34 @@ document.addEventListener("DOMContentLoaded", function() {
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
 
-    // DISABLE CREATE BUTTON BY DEFAULT
-    document.querySelector("#create").disabled = true;
-
-    // DISABLE SEND BUTTON BY DEFAULT
-    document.querySelector("#send").disabled = true;
-
-    // SET MESSAGES CONTENT BY DEFAULT(AKA WHEN NO CHANNEL IS SELECTED)
+    // SET UP DEFAULT CONTENT FOR DASHBOARD(AKA WHEN NO CHANNEL IS SELECTED)
     document.querySelector("#messages").innerHTML = "<h3>Here is the dashboard, when no channel is selected</h3>";
 
-    // ENABLE CREATE BUTTON WHEN USER TYPE SOMETHING
-    document.querySelector("#channel_name").onkeyup = function() {
-        // If input bar is not empty, enable button
-        if (document.querySelector("#channel_name").value.length > 0) {
-            document.querySelector("#create").disabled = false;
-        } else {
-            document.querySelector("#create").disabled = true;
-        }
-    };
+    // DISABLE SUBMIT BUTTONS BY DEFAULT
+    document.querySelectorAll("input[type='submit']").forEach(function(button) {
+        button.disabled = true;
+    });
 
-    // ENABLE SEND BUTTON WHEN USER TYPE SOMETHING
-    document.querySelector("#message").onkeyup = function() {
-        // If input bar is not empty, enable button
-        if (document.querySelector("#message").value.length > 0) {
-            document.querySelector("#send").disabled = false;
-        } else {
-            document.querySelector("#send").disabled = true;
-        }
-    };
+    // ONLY ENABLE SUBMIT BUTTONS WHEN USER TYPE SOMETHING
+    document.querySelectorAll("#channel_name, #message").forEach(function(input_bar) {
+        input_bar.onkeyup = function() {
+            // Retrieve submit button
+            const button = document.querySelector(`#${input_bar.id} + input`);
+
+            // If input bar is not empty, enable button
+            if (input_bar.value.length > 0) {
+                button.disabled = false;
+            } else {
+                button.disabled = true;
+            }
+        };
+    }); 
 
     // CREATE NEW CHANNEL
     document.querySelector("#new_channel").onsubmit = function() {
         // Initialize a new request
         const request = new XMLHttpRequest();
-        request.open('POST', '/create');
+        request.open('POST', '/add_channel');
 
         const channel_name = document.querySelector("#channel_name").value;
 
@@ -85,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Initialize a new request
         const request = new XMLHttpRequest();
-        request.open("POST", "/send_message");
+        request.open("POST", "/add_message");
 
         // Callback function when request completes
         request.onload = function() {
@@ -113,8 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Add data to send with request
         const data = new FormData();
         data.append("message", message);
-
-        // Retrieve selected channel_id
+        data.append("channel_name", active_channel.id);   
 
         // Send request 
         request.send(data);
@@ -141,17 +134,43 @@ document.addEventListener("DOMContentLoaded", function() {
             // Set the clicked button to active until another button is clicked
             div_area.target.className += " active";
 
-            console.log(document.querySelector("#messages").innerHTML);
+            // LOAD MESSAGE HISTORY OF A CHANNEL
 
-            // Update messages history with new channel
-            document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${div_area.target.id} </h3>`;
+            // Initialize a new request
+            const request = new XMLHttpRequest();
+            request.open("POST", "/load_messages")
+
+            // Callback function when request completes
+            request.onload = function() {
+                const data = JSON.parse(request.responseText);
+
+                document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${data.channel_name} </h3>`;
+
+                for(message of data.messages) {
+                    const p = document.createElement("p");
+
+                    p.innerHTML = `Text: ${message.message} written by ${message.author} at ${message.timestamp}`;
+
+                    document.querySelector("#messages").append(p);
+                }
+            };
+
+            // Add data to send with request
+            const data = new FormData();
+            data.append("channel_name", div_area.target.id);
+
+            // Send request 
+            request.send(data);
+
+            // Stop page from reloading
+            return false;
         }
     };
 
     // REMOVE A MESSAGE
     document.querySelector("#messages").onclick = function(event) {
         let targetId = event.target;
-        if(targetId.tagName != "BUTTON") return;
+        if(targetId.nodeName != "BUTTON") return;
 
         remove(targetId);
     };
@@ -161,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function load_channels() {
     // Initialize a new request
     const request = new XMLHttpRequest();
-    request.open('GET', '/load');
+    request.open('GET', '/load_channels');
 
     request.onload = function() {
         // Extract JSON data from object
@@ -182,8 +201,6 @@ function load_channels() {
 
     // Send request
     request.send();
-
-    return false;
 }
 
 // REMOVE A MESSAGE

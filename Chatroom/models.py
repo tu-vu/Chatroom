@@ -27,9 +27,9 @@ class User(UserMixin, db.Model):
     # Declare a relationship between User and Message
     messages = db.relationship("Message", backref="user",lazy=True)
 
-    def write_message(self, message, channel_id):
-        message = Message(message=message, author=self.username, channel_id=channel_id)
-        db.session.add(message)
+    def send_message(self, message, channel_id):
+        new_message = Message(message=message, author=self.username, channel_id=channel_id)
+        db.session.add(new_message)
         db.session.commit()
 
     def create_channel(self, channel_name):

@@ -19,8 +19,8 @@ def dashboard():
     return render_template("dashboard.html")
 
 ### CREATE NEW CHANNEL ###
-@main_bp.route("/create", methods=["POST"])
-def create():
+@main_bp.route("/add_channel", methods=["POST"])
+def add_channel():
     channel_name = request.form.get("channel_name")
 
     # Check if the channel already exists in database
@@ -35,17 +35,46 @@ def create():
         return jsonify({"success": False})
 
 ### LOAD ALL CHANNELS ASSOCIATING WITH USER ###
-@main_bp.route("/load", methods=["GET"])
-def load():
-    # Get a JSON serialized version of channels(basically a list of strings)
+@main_bp.route("/load_channels", methods=["GET"])
+def load_channels():
+    # Get a JSON serialized version of channels
     channels = [channel.name for channel in current_user.channels]
 
     return jsonify({"channels": channels})
 
 ### SEND A NEW MESSAGE IN A CHANNEL ###
-@main_bp.route("/send_message", methods=["POST"])
-def send_message():
-
+@main_bp.route("/add_message", methods=["POST"])
+def add_message():
     message = request.form.get("message")
+    channel_name = request.form.get("channel_name")
+
+    # Get channel info
+    channel = Channel.query.filter_by(name=channel_name).first()
+
+    # Add message to database
+    current_user.send_message(message=message, channel_id=channel.id)
 
     return jsonify({"message": message})
+
+### LOAD MESSAGE HISTORY OF A CHANNEL ###
+@main_bp.route("/load_messages", methods=["POST"])
+def load_messages():
+    channel_name = request.form.get("channel_name")
+
+    # Get channel info
+    channel = Channel.query.filter_by(name=channel_name).first()
+
+    messages = []
+
+    # Get a JSON serialized version of message history from database
+    for message in channel.messages:
+        # Initialize a JSON object
+        msg = dict()
+        msg["message"] = message.message
+        msg["author"] = message.author
+        msg["timestamp"] = message.timestamp
+
+        # Append it to our array
+        messages.append(msg)
+
+    return jsonify({"channel_name": channel_name, "messages": messages})
