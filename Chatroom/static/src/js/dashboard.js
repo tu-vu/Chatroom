@@ -77,6 +77,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Retrieve message typed by user 
         const message = document.querySelector("#message").value;
 
+        // Clear input bar
+        document.querySelector("#message").value = "";
+        document.querySelector("#send").disabled = true;
+
         // Initialize a new request
         const request = new XMLHttpRequest();
         request.open("POST", "/add_message");
@@ -89,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const p = document.createElement('p');
 
             // Set content of message tag
-            p.innerHTML = data.message;
+            p.innerHTML = data.author + ": " + message + " [" + data.timestamp + "]";
 
             // Append new message to messages
             document.querySelector("#messages").append(p);
@@ -120,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#channels").onclick = function(div_area) {
         // div_area.target is the clicked element!
 
-        // Only apply change if user click another button
+        // Only apply changes if user click another button
         if (div_area.target && div_area.target.nodeName == "BUTTON") {
             // Get currently clicked button
             const active_button = document.querySelector(".active");
@@ -134,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Set the clicked button to active until another button is clicked
             div_area.target.className += " active";
 
-            // LOAD MESSAGE HISTORY OF A CHANNEL
+            // LOAD MESSAGE HISTORY OF THE CHANNEL
 
             // Initialize a new request
             const request = new XMLHttpRequest();
@@ -149,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 for(message of data.messages) {
                     const p = document.createElement("p");
 
-                    p.innerHTML = `Text: ${message.message} written by ${message.author} at ${message.timestamp}`;
+                    p.innerHTML = `${message.author}: ${message.message} [${message.timestamp}]`;
 
                     document.querySelector("#messages").append(p);
                 }
@@ -172,7 +176,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let targetId = event.target;
         if(targetId.nodeName != "BUTTON") return;
 
-        remove(targetId);
+        let sibling = targetId.previousSibling;
+        sibling.remove();
+        target.remove();
     };
 });
 
@@ -201,11 +207,4 @@ function load_channels() {
 
     // Send request
     request.send();
-}
-
-// REMOVE A MESSAGE
-function remove(target){
-  let sibling = target.previousSibling;
-  sibling.remove();
-  target.remove();
 }
