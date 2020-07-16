@@ -2,11 +2,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_socketio import SocketIO
 from config import Config
 
 # Global accessible libraries
 db = SQLAlchemy()
 login_manager = LoginManager()
+socketio = SocketIO()
 
 def create_app():
     """ Initialize the core application """
@@ -16,6 +18,7 @@ def create_app():
     # Initialize Plugins
     db.init_app(app)
     login_manager.init_app(app)
+    socketio.init_app(app)
 
     with app.app_context():
         from . import routes

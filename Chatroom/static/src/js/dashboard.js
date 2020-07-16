@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // CONNECT TO WEBSOCKET TO ALLOW FOR REALTIME COMMUNICATION
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
 
@@ -30,10 +33,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // CREATE NEW CHANNEL
     document.querySelector("#new_channel").onsubmit = function() {
-        // Initialize a new request
-        const request = new XMLHttpRequest();
-        request.open('POST', '/add_channel');
-
         // Retrieve channel name typed by user 
         const channel_name = document.querySelector("#channel_name").value;
 
@@ -41,86 +40,55 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#channel_name").value = "";
         document.querySelector("#create").disabled = true;
 
-        // When the request is loaded successfully
-        request.onload = function() {
-            // Extract JSON data from request
-            const data = JSON.parse(request.responseText);
-
-            // If creation of new channel is successful
-            if(data.success) {
-                const button = document.createElement('button');
-                button.id = channel_name;
-                button.className += "channel";
-                button.innerHTML = channel_name;
-
-                // Append new button to list
-                document.querySelector("#channels").append(button);
-            } else {
-                alert(`Sorry, channel ${channel_name} already exists`);
-            }
-        };
-
-        // Add data to send with request
-        const data = new FormData();
-        data.append("channel_name", channel_name);
-
-        // Send request
-        request.send(data);
+        // Add new channel
+        add_channel(channel_name);
 
         // Stop page from reloading
         return false;
     };
 
     // SEND A NEW MESSAGE
-    document.querySelector("#new_message").onsubmit = function() {
-        // Retrieve message typed by user 
-        const message = document.querySelector("#message").value;
+    // CONFIGURE BUTTON WHEN SOCKET CONNECTED
+    socket.on("connect", function() {
+        document.querySelector("#new_message").onsubmit = function() {
+            // Retrieve message typed by user 
+            const message = document.querySelector("#message").value;
 
-        // Retrieve selected channel
-        const active_channel = document.querySelector(".active");
+            // Retrieve selected channel
+            const active_channel = document.querySelector(".active");
 
-        // Clear input bar
-        document.querySelector("#message").value = "";
-        document.querySelector("#send").disabled = true;
+            // Clear input bar
+            document.querySelector("#message").value = "";
+            document.querySelector("#send").disabled = true;
 
-        // Initialize a new request
-        const request = new XMLHttpRequest();
-        request.open("POST", "/add_message");
+            // Add new message
+            add_message(message, active_channel.id, socket);
 
-        // Callback function when request completes
-        request.onload = function() {
-            const data = JSON.parse(request.responseText);
-
-            // Create new message tag
-            const p = document.createElement('p');
-
-            // Set content of message tag
-            p.innerHTML = data.author + ": " + message + " [" + data.timestamp + "]";
-
-            // Append new message to messages
-            document.querySelector("#messages").append(p);
-
-            // Adding delete button for each message
-            const button = document.createElement('button');
-
-            //set content of the button
-            button.innerHTML = "[x]";
-
-            // Append the button to the div
-            document.querySelector("#messages").append(button);
+            // Stop page from reloading
+            return false;
         };
+    });
 
-        // Add data to send with request
-        const data = new FormData();
-        data.append("message", message);
-        data.append("channel_name", active_channel.id);   
+    // WHEN A NEW MESSAGE IS SENT, DISPLAY IT TO EVERYONE IN CHANNEL
+    socket.on("announce message", function(data) {
+        // Create new message tag
+        const p = document.createElement('p');
 
-        // Send request 
-        request.send(data);
+        // Set content of message tag
+        p.innerHTML = data.author + ": " + data.message + " [" + data.timestamp + "]";
 
-        // Stop page from reloading
-        return false;
-    };
+        // Append new message to messages
+        document.querySelector("#messages").append(p);
+
+        // Adding delete button for each message
+        const button = document.createElement('button');
+
+        //set content of the button
+        button.innerHTML = "[x]";
+
+        // Append the button to the div
+        document.querySelector("#messages").append(button);
+    });
 
     // USER CLICKED ONE OF CHANNEL
     document.querySelector("#channels").onclick = function(div_area) {
@@ -223,3 +191,58 @@ function load_messages(channel) {
     request.send(data);
 }
 
+// ADD NEW CHANNEL 
+function add_channel(channel_name) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open('POST', '/add_channel');
+
+    // When the request is loaded successfully
+    request.onload = function() {
+        // Extract JSON data from request
+        const data = JSON.parse(request.responseText);
+
+        // If creation of new channel is successful
+        if(data.success) {
+            const button = document.createElement('button');
+            button.id = channel_name;
+            button.className += "channel";
+            button.innerHTML = channel_name;
+
+            // Append new button to list
+            document.querySelector("#channels").append(button);
+        } else {
+            alert(`Sorry, channel ${channel_name} already exists`);
+        }
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("channel_name", channel_name);
+
+    // Send request
+    request.send(data);
+}
+
+// ADD NEW MESSAGE 
+function add_message(message, channel_id, socket) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open("POST", "/add_message");
+
+    // Callback function when request completes
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+
+        // Emit(Start) event "send message" when message form is submitted
+        socket.emit("send message", {"message": message, "author": data.author, "timestamp": data.timestamp});
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("message", message);
+    data.append("channel_name", channel_id);   
+
+    // Send request 
+    request.send(data);
+}

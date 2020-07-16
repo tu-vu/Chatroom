@@ -1,10 +1,9 @@
 """ Routes for page content """
-from flask import Blueprint, url_for, render_template, request, redirect, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import current_user, login_required
-from .forms import *
+from flask_socketio import emit
 from .models import *
-from .import Config
-import requests
+from .import socketio
 
 # Blueprint Configuration
 main_bp = Blueprint(
@@ -78,3 +77,15 @@ def load_messages():
         messages.append(msg)
 
     return jsonify({"channel_name": channel_name, "messages": messages})
+
+@socketio.on("send message")
+def send_message(data):
+    # Retrieve info of message
+    message = data["message"]
+    author = data["author"]
+    timestamp = data["timestamp"]
+
+    # Broadcast the message to all users in that channel
+    emit("announce message", {"message": message, "author": author, "timestamp": timestamp}, broadcast=True)
+
+
