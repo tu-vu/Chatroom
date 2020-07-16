@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector("#message").value = "";
             document.querySelector("#send").disabled = true;
 
-            // Add new message
-            add_message(message, active_channel.id, socket);
+            // Emit(Start) event "send message" when message form is submitted
+            socket.emit("add message", {"message": message, "channel_name": active_channel.id});
 
             // Stop page from reloading
             return false;
@@ -221,28 +221,5 @@ function add_channel(channel_name) {
     data.append("channel_name", channel_name);
 
     // Send request
-    request.send(data);
-}
-
-// ADD NEW MESSAGE 
-function add_message(message, channel_id, socket) {
-    // Initialize a new request
-    const request = new XMLHttpRequest();
-    request.open("POST", "/add_message");
-
-    // Callback function when request completes
-    request.onload = function() {
-        const data = JSON.parse(request.responseText);
-
-        // Emit(Start) event "send message" when message form is submitted
-        socket.emit("send message", {"message": message, "author": data.author, "timestamp": data.timestamp});
-    };
-
-    // Add data to send with request
-    const data = new FormData();
-    data.append("message", message);
-    data.append("channel_name", channel_id);   
-
-    // Send request 
     request.send(data);
 }
