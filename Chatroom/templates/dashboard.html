@@ -2,6 +2,7 @@
 
 {% block pagestyles %}
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
+
 {% endblock %}
 
 {% block javascript %}
@@ -26,7 +27,11 @@
             <div id="messages">
             </div>
             <form id="new_message" class="form-inline">
-                <input id="message" type="text">
+                <!-- New Changes -->
+                <p class="lead emoji-picker-container">
+                <input id="message" type="text" data-emojiable="true" style="width: 1000px;">
+                </p>
+                <!-- -->
                 <input type="submit" id="send"  value="Send">
             </form>
         </div>       
