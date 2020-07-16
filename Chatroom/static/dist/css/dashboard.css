@@ -18,6 +18,10 @@ html, body, .container-fluid, .row {
     background-color: #001eff;
 }
 
+#mid {
+    height: 100%;
+}
+
 form #message {
     width: 90%;
 }
@@ -28,10 +32,11 @@ form #send {
 
 #messages {
     overflow-y: auto;
-    height: 675px;
+    height: 92%;
+    margin-bottom: 10px;
 }
 
 .active {
-background-color: #666;
-color: white;
+    background-color: #666;
+    color: white;
 }

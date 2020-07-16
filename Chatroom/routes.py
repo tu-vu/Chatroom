@@ -1,10 +1,9 @@
 """ Routes for page content """
-from flask import Blueprint, url_for, render_template, request, redirect, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import current_user, login_required
-from .forms import *
+from flask_socketio import emit
 from .models import *
-from .import Config
-import requests
+from .import socketio
 
 # Blueprint Configuration
 main_bp = Blueprint(
@@ -43,10 +42,11 @@ def load_channels():
     return jsonify({"channels": channels})
 
 ### SEND A NEW MESSAGE IN A CHANNEL ###
-@main_bp.route("/add_message", methods=["POST"])
-def add_message():
-    message = request.form.get("message")
-    channel_name = request.form.get("channel_name")
+@socketio.on("add message")
+def add_message(data):
+    # Retrieve info of message
+    message = data["message"]
+    channel_name = data["channel_name"]
 
     # Get channel id
     channel_id = Channel.query.filter_by(name=channel_name).first().id
@@ -54,7 +54,8 @@ def add_message():
     # Add message to database
     timestamp = current_user.send_message(message=message, channel_id=channel_id)
 
-    return jsonify({"author": current_user.username, "timestamp": timestamp.strftime('%H:%M')})
+    # Broadcast the message to all users in that channel
+    emit("announce message", {"message": message, "author": current_user.username, "timestamp": timestamp.strftime('%H:%M')}, broadcast=True)
 
 ### LOAD MESSAGE HISTORY OF A CHANNEL ###
 @main_bp.route("/load_messages", methods=["POST"])
