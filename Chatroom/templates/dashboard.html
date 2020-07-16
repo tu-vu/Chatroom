@@ -11,38 +11,29 @@
 {% block title %} Dashboard - Messagetastic {% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-
-        <div class="row">
-
-            <div id="left" class="col-2">
-                <h1>Channels</h1>
-                <!-- Form to create new channel -->
-                <form id="new_channel">
-                    <input type="text" id="channel_name" placeholder="Channel name">
-                    <input type="submit" id="create" value="Create">
-                </form>
-                <div id="channels">
-                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div id="left" class="col-2">
+            <h1>Channels</h1>
+            <form id="new_channel">
+                <input type="text" id="channel_name" placeholder="Channel name">
+                <input type="submit" id="create" value="Create">
+            </form>
+            <div id="channels">
             </div>
-
-            <div id="mid" class="col-8">
-                <div id="messages">
-                    <h3 id="direction">Messages will appear here!</h3>
-                </div>
-                <form id="new-message" class="form-inline">
-                    <input id="message" type="text" name="message">
-                    <input id="send" type="submit" value="Send">
-                </form>
-            </div>       
-
-            <div id="right" class="col-2">
-                <h1>Members</h1>
-                <form action="{{ url_for('auth_bp.logout') }}"  method="get"><button class="btn btn-info btn-block">Log out</button></form>
-            </div>
-
         </div>
-
+        <div id="mid" class="col-8">
+            <div id="messages">
+            </div>
+            <form id="new_message" class="form-inline">
+                <input id="message" type="text">
+                <input type="submit" id="send"  value="Send">
+            </form>
+        </div>       
+        <div id="right" class="col-2">
+            <h1>Members</h1>
+            <form action="{{ url_for('auth_bp.logout') }}"  method="get"><button class="btn btn-info btn-block">Log out</button></form>
+        </div>
     </div>
-
+</div>
 {% endblock %}

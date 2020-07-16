@@ -143,44 +143,8 @@ document.addEventListener("DOMContentLoaded", function() {
             // Set the clicked button to active until another button is clicked
             div_area.target.className += " active";
 
-            // LOAD MESSAGE HISTORY OF THE CHANNEL
-            // Initialize a new request
-            const request = new XMLHttpRequest();
-            request.open("POST", "/load_messages")
-
-            // Callback function when request completes
-            request.onload = function() {
-                const data = JSON.parse(request.responseText);
-
-                document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${data.channel_name} </h3>`;
-
-                for(message of data.messages) {
-                    const p = document.createElement("p");
-
-                    p.innerHTML = `${message.author}: ${message.message} [${message.timestamp}]`;
-
-                    document.querySelector("#messages").append(p);
-
-                    // Adding delete button for each message
-                    const button = document.createElement('button');
-
-                    //Set content of the button
-                    button.innerHTML = "[x]";
-
-                    // Append the button to the div
-                    document.querySelector("#messages").append(button);
-                }
-            };
-
-            // Add data to send with request
-            const data = new FormData();
-            data.append("channel_name", div_area.target.id);
-
-            // Send request 
-            request.send(data);
-
-            // Stop page from reloading
-            return false;
+            // Load message history of channel
+            load_messages(div_area.target);
         }
     };
 
@@ -220,3 +184,42 @@ function load_channels() {
     // Send request
     request.send();
 }
+
+// LOAD MESSAGE HISTORY OF THE CHANNEL
+function load_messages(channel) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open("POST", "/load_messages")
+
+    // Callback function when request completes
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+
+        document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${data.channel_name} </h3>`;
+
+        for(message of data.messages) {
+            const p = document.createElement("p");
+
+            p.innerHTML = `${message.author}: ${message.message} [${message.timestamp}]`;
+
+            document.querySelector("#messages").append(p);
+
+            // Adding delete button for each message
+            const button = document.createElement('button');
+
+            //Set content of the button
+            button.innerHTML = "[x]";
+
+            // Append the button to the div
+            document.querySelector("#messages").append(button);
+        }
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("channel_name", channel.id);
+
+    // Send request 
+    request.send(data);
+}
+
