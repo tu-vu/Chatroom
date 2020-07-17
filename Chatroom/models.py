@@ -25,7 +25,10 @@ class User(UserMixin, db.Model):
     channels = db.relationship("Channel", secondary=mems, backref=db.backref('members', lazy= 'dynamic'))
 
     # Declare a relationship between User and Message
-    messages = db.relationship("Message", backref="user",lazy=True)
+    messages = db.relationship("Message", backref="user", lazy=True)
+
+    # Each user will have a record of invitations to join other channels
+    invitations = db.relationship("Invitation", backref="user", lazy=True)
 
     def send_message(self, message, channel_id):
         new_message = Message(message=message, author=self.username, channel_id=channel_id)
@@ -45,6 +48,18 @@ class User(UserMixin, db.Model):
         db.session.add(new_channel)
         db.session.commit()
 
+    def invite(self, invitee, channel):
+        new_invitation = Invitation(host=self.username, invitee=invitee, channel=channel)
+
+        # Add invitation to database
+        db.session.add(new_invitation)
+        db.session.commit()
+
+    def join(self, channel):
+        # Add user to the channel
+        channel.members.append(self)
+        db.session.commit()
+
 class Channel(db.Model):
     __tablename__ = "channels"
     # an easy way to reference each channel
@@ -62,7 +77,7 @@ class Message(db.Model):
     message = db.Column(db.String, nullable=False)
 
     # Name of author
-    author = db.Column(db.String, db.ForeignKey('users.username') , nullable=False)
+    author = db.Column(db.String, db.ForeignKey('users.username'), nullable=False)
 
     # Channel ID
     channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable=False)
@@ -70,3 +85,17 @@ class Message(db.Model):
     # Time when the message was made
     # No need to worry about this since we already default it to "now"
     timestamp = db.Column(db.DateTime(), default=datetime.now, index=True)
+
+class Invitation(db.Model):
+    __tablename__ = "invitations"
+    # an easy way to reference each invitation
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Host (User who invite)
+    host = db.Column(db.String, nullable=False)
+
+    # Invitee (User who receive invitation)
+    invitee = db.Column(db.String, db.ForeignKey('users.username'), nullable=False)
+
+    # Channel (Which channel to join)
+    channel = db.Column(db.String, nullable=False)
