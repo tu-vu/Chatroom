@@ -3,16 +3,26 @@
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!-- New Changes -->
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         
         {% block pagestyles %}{% endblock %}
         
         {% block javascript %}{% endblock %}
 
         <title>{% block title %}{% endblock %}</title>
+
+    <!-- New Changes -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+ -->
+    <!-- Begin emoji-picker Stylesheets -->
+    <!-- <link href="../static/lib/css/emoji.css" rel="stylesheet"> -->
+    <!-- End emoji-picker Stylesheets -->
+    <!-- New Changes -->
     </head>
     <body>
         {% block body %}
@@ -21,5 +31,33 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
+        <!-- New Changes -->
+        <!-- <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> -->
+
+        <!-- Begin emoji-picker JavaScript -->
+        <!-- <script src="../static/lib/js/config.js"></script>
+        <script src="../static/lib/js/util.js"></script>
+        <script src="../static/lib/js/jquery.emojiarea.js"></script>
+        <script src="../static/lib/js/emoji-picker.js"></script> -->
+        <!-- End emoji-picker JavaScript -->
+       
+
+      <!--   <script> -->
+      <!--   // $(function() {
+        // Initializes and creates emoji set from sprite sheet
+        //   window.emojiPicker = new EmojiPicker({
+        //   emojiable_selector: '[data-emojiable=true]',
+        //   assetsPath: '../static/lib/img/',
+        //   popupButtonClasses: 'fa fa-smile-o'
+        // });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+           window.emojiPicker.discover();
+          }); -->
+        <!-- </script> -->
+        <!-- New Changes -->
     </body>
 </html>
