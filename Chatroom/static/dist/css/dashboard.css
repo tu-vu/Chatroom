@@ -40,3 +40,13 @@ form #send {
     background-color: #666;
     color: white;
 }
+
+#new_member {
+    background-color: #afeeee;
+
+    margin-bottom: 50px;
+}
+
+.form-group input, textarea {
+    width: 100%;
+}
