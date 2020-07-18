@@ -4,7 +4,11 @@ html, body, .container-fluid, .row {
 }
 
 .container-fluid {
-    width: 100%;
+    padding: 0px;
+}
+
+.row {
+    margin: 0px;
 }
 
 .col-2 {
@@ -20,6 +24,10 @@ html, body, .container-fluid, .row {
 }
 
 #mid {
+    height: 100%;
+}
+
+#messenger { 
     height: 100%;
 }
 

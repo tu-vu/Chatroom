@@ -8,12 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // SET UP DEFAULT CONTENT FOR DASHBOARD
     load_dashboard();
 
-    // LOAD ALL PENDING INVITATION
-    load_invitations();
-
     // HIDE MESSAGE HISTORY AND MESSAGE FORM BY DEFAULT
-    document.querySelector("#new_message").style.display = "none";
-    document.querySelector("#messages").style.display = "none";
+    document.querySelector("#messenger").style.display = "none";
 
     // DISABLE SUBMIT BUTTONS BY DEFAULT
     document.querySelectorAll("input[type='submit']").forEach(function(button) {
@@ -21,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ONLY ENABLE SUBMIT BUTTONS WHEN USER TYPE SOMETHING
-    document.querySelectorAll("#channel_name, #message, #username").forEach(function(input_bar) {
+    document.querySelectorAll("input[type='text']").forEach(function(input_bar) {
         input_bar.onkeyup = function() {
             // Retrieve submit button
             const button = document.querySelector(`#${input_bar.id} ~ input`);
@@ -94,10 +90,11 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#messages").append(button);
     });
 
-    // REMOVE A MESSAGE
-    document.querySelector("#messages").onclick = function(event) {
-        let targetId = event.target;
-        if(targetId.tagName !== "BUTTON") return;
+    // REMOVE A MESSAGE (UPDATE THIS IN DATABASE)
+    document.querySelector("#messages").onclick = function(div_area) {
+        const targetId = div_area.target;
+        if(targetId.tagName !== "BUTTON") 
+            return;
 
         targetId.previousSibling.remove();
         targetId.remove();
@@ -109,27 +106,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Only apply changes if user click another button
         if (div_area.target && div_area.target.nodeName === "BUTTON") {
+            const active_channel = div_area.target;
+
             // Hide dashboard
             document.querySelector("#dashboard").style.display = "none";
 
             // Show message history and form
-            document.querySelector("#new_message").style.display = "";
-            document.querySelector("#messages").style.display = "";
+            document.querySelector("#messenger").style.display = "";
 
-            // Get previously clicked button
-            const active_button = document.querySelector(".active");
+            // Get previously clicked channel
+            const prev_channel = document.querySelector(".active");
 
             // No button is clicked yet
-            if (active_button !== null) {
+            if (prev_channel !== null) {
                 // Remove clicked status
-                active_button.className = active_button.className.replace(" active", "");
+                prev_channel.className = prev_channel.className.replace(" active", "");
             }
 
             // Set the clicked button to active until another button is clicked
-            div_area.target.className += " active";
+            active_channel.className += " active";
 
             // Load all info of channel(message history, members, etc)
-            load_channel_info(div_area.target);
+            load_channel_info(active_channel);
         }
     };
 
@@ -167,18 +165,18 @@ document.addEventListener("DOMContentLoaded", function() {
             if (div_area.target.id === "accept") {
                 join_channel(channel_name);
 
-                // Create a button
-                const button = document.createElement('button');
-                button.id = channel_name;
-                button.className += "channel";
-                button.innerHTML = channel_name;
-
                 // Add button to field
-                document.querySelector("#channels").append(button);
-            }
+                document.querySelector("#channels").innerHTML += `<button id=${channel_name} class='channel'>${channel_name}</button>`;
+            } 
 
-            // Clear invitation
-            clear_invitation(invitation);
+            // Clear invitation in database
+            clear_invitation(invitation.id);
+            invitation.remove();
+
+            // Check if there is any invitation left 
+            if(document.querySelector("#dashboard form") === null) {
+                document.querySelector("#dashboard").innerHTML += "<p>Yout have no pending invitation</p>";
+            }
         }
         return false;
     };
@@ -220,36 +218,23 @@ function load_channel_info(channel) {
     // Callback function when request completes
     request.onload = function() {
         const data = JSON.parse(request.responseText);
+        const messages = document.querySelector("#messages");        
+        const members = document.querySelector("#members");
 
         // Reset message history
-        document.querySelector("#messages").innerHTML = `<h3>Here is messages history for ${data.channel_name} </h3>`;
+        messages.innerHTML = `<h3>Here is messages history for ${channel.id} </h3>`;
 
         // Reset members
-        document.querySelector("#members").innerHTML = "";
+        members.innerHTML = "";
 
+        // Display message history
         for(message of data.messages) {
-            const p = document.createElement("p");
-
-            p.innerHTML = `${message.author}: ${message.message} [${message.timestamp}]`;
-
-            document.querySelector("#messages").append(p);
-
-            // Adding delete button for each message
-            const button = document.createElement('button');
-
-            //Set content of the button
-            button.innerHTML = "[x]";
-
-            // Append the button to the div
-            document.querySelector("#messages").append(button);
+            messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
         }
 
+        // Display members of channel
         for(member of data.members) {
-            const li = document.createElement("li");
-
-            li.innerHTML = `${member.username}`;
-
-            document.querySelector("#members").append(li);
+            members.innerHTML += `<li>${member.username}</li>`;
         }
     };
 
@@ -263,19 +248,48 @@ function load_channel_info(channel) {
 
 // LOAD CONTENT OF DASHBOARD
 function load_dashboard() {
-    // Create header
-    const h3 = document.createElement("h3");
-    h3.innerHTML = "Here is the dashboard, when no channel is selected";
+    const dashboard = document.querySelector("#dashboard");
 
     // Append header
-    document.querySelector("#dashboard").append(h3);
+    dashboard.innerHTML += "<h3>Here is the dashboard, when no channel is selected</h3>";
 
-    // Create invitation status
-    const p = document.createElement("p");
-    p.innerHTML = "You have no pending invitation :(";
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open('GET', '/load_invitations');
 
-    // Append status
-    document.querySelector("#dashboard").append(p);
+    request.onload = function() {
+        // Extract JSON data from object
+        const data = JSON.parse(request.responseText);
+
+        // Check if there's any invitation from other users
+        if (!data.invitations || !data.invitations.length) {
+            dashboard.innerHTML += "<p>Yout have no pending invitation</p>";
+            return;
+        }
+
+        // Traverse and print all invitations
+        for (invitation of data.invitations) {
+            // Create invitation form 
+            const form = document.createElement('form');
+            form.id = "i" + invitation.id;
+            form.dataset.channel_name = invitation.channel;
+            form.style.backgroundColor = "#5dadec";
+
+            const notification = `User ${invitation.host} invited you to join channel ${invitation.channel}`;
+
+            const accept = "<input type='submit' id='accept' value='Accept'></input>";
+
+            const decline = "<input type='submit' id='decline' value='Decline'></input>";
+
+            form.innerHTML += notification + accept + decline
+
+            // Add button to field
+            dashboard.append(form);
+        }
+    };
+
+    // Send request
+    request.send();
 }
 
 // ADD NEW CHANNEL 
@@ -311,43 +325,8 @@ function add_channel(channel_name) {
     request.send(data);
 }
 
-// LOAD PENDING INVITATIONS IN DASHBOARD
-function load_invitations() {
-    // Initialize a new request
-    const request = new XMLHttpRequest();
-    request.open('GET', '/load_invitations');
-
-    request.onload = function() {
-        // Extract JSON data from object
-        const data = JSON.parse(request.responseText);
-
-        // Traverse and print all invitations
-        for (invitation of data.invitations) {
-            // Create invitation form 
-            const form = document.createElement('form');
-            form.id = invitation.id;
-            form.dataset.channel_name = invitation.channel;
-            form.style.backgroundColor = "#5dadec";
-
-            const notification = `User ${invitation.host} invited you to join channel ${invitation.channel}`;
-
-            const accept = "<input type='submit' id='accept' value='Accept'></input>";
-
-            const decline = "<input type='submit' id='decline' value='Decline'></input>";
-
-            form.innerHTML += notification + accept + decline
-
-            // Add button to field
-            document.querySelector("#dashboard").append(form);
-        }
-    };
-
-    // Send request
-    request.send();
-}
-
 // SEND INVITATION TO ANOTHER USER
-function send_invitation(username, channel) {
+function send_invitation(username, channel_name) {
     // Initialize a new request
     const request = new XMLHttpRequest();
     request.open('POST', '/send_invitation');
@@ -368,7 +347,7 @@ function send_invitation(username, channel) {
     // Add data to send with request
     const data = new FormData();
     data.append("username", username);
-    data.append("channel", channel);
+    data.append("channel_name", channel_name);
 
     // Send request
     request.send(data);
@@ -404,13 +383,11 @@ function clear_invitation(invitation) {
     request.onload = function() {
         // Extract JSON data from request
         const data = JSON.parse(request.responseText);
-
-        invitation.remove();
     };
 
     // Add data to send with request
     const data = new FormData();
-    data.append("invitation_id", invitation.id);
+    data.append("invitation_id", invitation.substring(1));
 
     // Send request
     request.send(data);
