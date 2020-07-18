@@ -1,7 +1,7 @@
 """ Routes for page content """
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import current_user, login_required
-from flask_socketio import emit
+from flask_socketio import emit, join_room, leave_room
 from .models import *
 from .import socketio
 
@@ -47,7 +47,19 @@ def add_message(data):
     timestamp = current_user.send_message(message=message, channel_id=channel_id)
 
     # Broadcast the message to all users in that channel
-    emit("announce message", {"message": message, "author": current_user.username, "timestamp": timestamp.strftime('%H:%M')}, broadcast=True)
+    emit("announce message", {"message": message, "author": current_user.username, "timestamp": timestamp.strftime('%H:%M')}, room=channel_name)
+
+### JOIN USER TO SELECTED CHANNEL ###
+@socketio.on('join')
+def join(data):
+    channel_name = data['channel_name']
+    join_room(channel_name)
+
+### LEAVE SELECTED CHANNEL ###
+@socketio.on('leave')
+def leave(data):
+    channel_name = data['channel_name']
+    leave_room(channel_name)
 
 ### LOAD ALL CHANNELS ASSOCIATING WITH USER ###
 @main_bp.route("/load_channels", methods=["GET"])

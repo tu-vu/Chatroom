@@ -9,7 +9,10 @@ document.addEventListener("DOMContentLoaded", function() {
     load_dashboard();
 
     // HIDE MESSAGE HISTORY AND MESSAGE FORM BY DEFAULT
-    document.querySelector("#messenger").style.display = "none";
+    document.querySelector("#messenger").style.display = "none";    
+
+    // HIDE MEMBER LIST AND INVITE FORM BY DEFAULT
+    document.querySelector("#membership").style.display = "none";
 
     // DISABLE SUBMIT BUTTONS BY DEFAULT
     document.querySelectorAll("input[type='submit']").forEach(function(button) {
@@ -47,9 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
         return false;
     };
 
-    // SEND A NEW MESSAGE
     // CONFIGURE BUTTON WHEN SOCKET CONNECTED
     socket.on("connect", function() {
+        // SEND A NEW MESSAGE
         document.querySelector("#new_message").onsubmit = function() {
             // Retrieve message typed by user 
             const message = document.querySelector("#message").value;
@@ -62,10 +65,50 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector("#send").disabled = true;
 
             // Emit(Start) event "send message" when message form is submitted
-            socket.emit("add message", {"message": message, "channel_name": active_channel.id});
+            socket.emit("add message", {"message": message, "channel_name": active_channel.innerHTML});
 
             // Stop page from reloading
             return false;
+        };
+
+        // USER CLICKED ONE OF CHANNEL
+        document.querySelector("#channels").onclick = function(div_area) {
+            // div_area.target is the clicked element!
+
+            // Only apply changes if user click another button
+            if (div_area.target && div_area.target.nodeName === "BUTTON") {
+                const active_channel = div_area.target;
+
+                // Hide dashboard
+                document.querySelector("#dashboard").style.display = "none";
+
+                // Show message history and form
+                document.querySelector("#messenger").style.display = "";            
+
+                // Show members list and form
+                document.querySelector("#membership").style.display = "";
+
+                // Get previously clicked channel
+                const prev_channel = document.querySelector(".active");
+
+                // No button is clicked yet
+                if (prev_channel !== null) {
+                    // Remove clicked status
+                    prev_channel.className = prev_channel.className.replace(" active", "");
+
+                    // Emit(Start) event "leave" previous channel when user click new channel
+                    socket.emit("leave", {"channel_name": prev_channel.innerHTML});
+                }
+
+                // Set the clicked button to active until another button is clicked
+                active_channel.className += " active";
+
+                // Load all info of channel(message history, members, etc)
+                load_channel_info(active_channel);
+
+                // Emit(Start) event "join" when user enters the channel
+                socket.emit("join", {"channel_name": active_channel.innerHTML});
+            }
         };
     });
 
@@ -100,37 +143,6 @@ document.addEventListener("DOMContentLoaded", function() {
         targetId.remove();
     };
 
-    // USER CLICKED ONE OF CHANNEL
-    document.querySelector("#channels").onclick = function(div_area) {
-        // div_area.target is the clicked element!
-
-        // Only apply changes if user click another button
-        if (div_area.target && div_area.target.nodeName === "BUTTON") {
-            const active_channel = div_area.target;
-
-            // Hide dashboard
-            document.querySelector("#dashboard").style.display = "none";
-
-            // Show message history and form
-            document.querySelector("#messenger").style.display = "";
-
-            // Get previously clicked channel
-            const prev_channel = document.querySelector(".active");
-
-            // No button is clicked yet
-            if (prev_channel !== null) {
-                // Remove clicked status
-                prev_channel.className = prev_channel.className.replace(" active", "");
-            }
-
-            // Set the clicked button to active until another button is clicked
-            active_channel.className += " active";
-
-            // Load all info of channel(message history, members, etc)
-            load_channel_info(active_channel);
-        }
-    };
-
     // INVITE ANOTHER USER TO JOIN SELECTED CHANNEL
     document.querySelector("#new_member").onsubmit = function() {
         // Retrieve usename typed by user 
@@ -144,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#invite").disabled = true;
 
         // Send invitation
-        send_invitation(username, active_channel.id);
+        send_invitation(username, active_channel.innerHTML);
 
         // Stop page from reloading
         return false;
@@ -165,8 +177,8 @@ document.addEventListener("DOMContentLoaded", function() {
             if (div_area.target.id === "accept") {
                 join_channel(channel_name);
 
-                // Add button to field
-                document.querySelector("#channels").innerHTML += `<button id=${channel_name} class='channel'>${channel_name}</button>`;
+                // Add channel to field
+                document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             } 
 
             // Clear invitation in database
@@ -194,14 +206,8 @@ function load_channels() {
 
         // Traverse and print all channels
         for (channel_name of data.channels) {
-            // Create a button
-            const button = document.createElement('button');
-            button.id = channel_name
-            button.className += "channel";
-            button.innerHTML = channel_name;
-
-            // Add button to field
-            document.querySelector("#channels").append(button);
+            // Add channel to field
+            document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
         }
     };
 
@@ -222,7 +228,7 @@ function load_channel_info(channel) {
         const members = document.querySelector("#members");
 
         // Reset message history
-        messages.innerHTML = `<h3>Here is messages history for ${channel.id} </h3>`;
+        messages.innerHTML = `<h3>Here is messages history for ${channel.innerHTML} </h3>`;
 
         // Reset members
         members.innerHTML = "";
@@ -240,7 +246,7 @@ function load_channel_info(channel) {
 
     // Add data to send with request
     const data = new FormData();
-    data.append("channel_name", channel.id);
+    data.append("channel_name", channel.innerHTML);
 
     // Send request 
     request.send(data);
@@ -305,13 +311,8 @@ function add_channel(channel_name) {
 
         // If creation of new channel is successful
         if(data.success) {
-            const button = document.createElement('button');
-            button.id = channel_name;
-            button.className += "channel";
-            button.innerHTML = channel_name;
-
-            // Append new button to list
-            document.querySelector("#channels").append(button);
+            // Add channel to field
+            document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
         } else {
             alert(`Sorry, channel ${channel_name} already exists`);
         }

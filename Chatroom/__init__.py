@@ -8,7 +8,7 @@ from config import Config
 # Global accessible libraries
 db = SQLAlchemy()
 login_manager = LoginManager()
-socketio = SocketIO()
+socketio = SocketIO(cors_allowed_origins="*", logger=True, engineio_logger=True)
 
 def create_app():
     """ Initialize the core application """

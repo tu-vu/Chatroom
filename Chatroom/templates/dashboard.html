@@ -41,15 +41,17 @@
             </div>
         </div>       
         <div id="right" class="col-2">
-            <h1>Members</h1>
+            <div id="membership">
+                <h1>Members</h1>
 
-            <ul id="members">
-            </ul>
+                <ul id="members">
+                </ul>
 
-            <form id="new_member">
-                <input type="text" id="username" placeholder="Username">
-                <input type="submit" id="invite" value="Invite">
-            </form>
+                <form id="new_member">
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="submit" id="invite" value="Invite">
+                </form>
+            </div>
 
             <form action="{{ url_for('auth_bp.logout') }}"  method="get"><button class="btn btn-info btn-block">Log out</button></form>
         </div>
