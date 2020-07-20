@@ -129,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if(targetId.tagName !== "BUTTON") 
             return;
 
-
-
         const container = targetId.parentElement;
         const message = targetId.previousSibling;
         clear_message(message.id);
