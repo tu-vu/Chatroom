@@ -35,8 +35,8 @@ class User(UserMixin, db.Model):
         db.session.add(new_message)
         db.session.commit()
 
-        # Return time when message was sent
-        return new_message.timestamp
+        # Return id & time of message
+        return [new_message.id, new_message.timestamp]
 
     def create_channel(self, channel_name):
         new_channel = Channel(name=channel_name)

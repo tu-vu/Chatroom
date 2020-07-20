@@ -114,30 +114,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // WHEN A NEW MESSAGE IS SENT, DISPLAY IT TO EVERYONE IN CHANNEL
     socket.on("announce message", function(data) {
-        // // Create new message tag
-        // const p = document.createElement('p');
-
-        // // Set content of message tag
-        // p.innerHTML = data.author + ": " + data.message + " [" + data.timestamp + "]";
-
-        // // Append new message to messages
-        // document.querySelector("#messages").append(p);
-
-        // // Adding delete button for each message
-        // const button = document.createElement('button');
-
-        // //set content of the button
-        // button.innerHTML = "[x]";
-
-        // // Append the button to the div
-        // document.querySelector("#messages").append(button);
-
         //Change Demo: create a div message
         const message =  document.createElement('div');
         message.setAttribute("class", "container");
         message.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
-                            <p> ${data.author}: ${data.message}</p>
-                            <button type="button" class="btn btn-danger">x</button>
+                            <p id=m${data.id}> ${data.author}: ${data.message}</p><button type="button" class="btn btn-danger">x</button>
                             <span class="time-right">${data.timestamp}</span>`
         document.querySelector("#messages").append(message);
     });
@@ -148,8 +129,13 @@ document.addEventListener("DOMContentLoaded", function() {
         if(targetId.tagName !== "BUTTON") 
             return;
 
-        targetId.previousSibling.remove();
-        targetId.remove();
+
+
+        const container = targetId.parentElement;
+        const message = targetId.previousSibling;
+        clear_message(message.id);
+        container.innerHTML = "";
+        container.remove();
     };
 
     // INVITE ANOTHER USER TO JOIN SELECTED CHANNEL
@@ -247,10 +233,10 @@ function load_channel_info(channel) {
 
         // Display message history
         for(message of data.messages) {
-            // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
-         messages.innerHTML += `<div class="container"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
-                            <p> ${message.author}: ${message.message}</p>
-                            <button type="button" class="btn btn-danger">x</button>
+        // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+
+         messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
+                            <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
                             <span class="time-right">${message.timestamp}</span></div>`;
         }
 
@@ -409,6 +395,26 @@ function clear_invitation(invitation) {
     // Add data to send with request
     const data = new FormData();
     data.append("invitation_id", invitation.substring(1));
+
+    // Send request
+    request.send(data);
+}
+
+// DELETE A MESSAGE
+function clear_message(message) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open('POST', '/clear_message');
+
+    // When the request is loaded successfully
+    request.onload = function() {
+        // Extract JSON data from request
+        const data = JSON.parse(request.responseText);
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("message_id", message.substring(1));
 
     // Send request
     request.send(data);
