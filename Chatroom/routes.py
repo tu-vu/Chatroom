@@ -44,10 +44,10 @@ def add_message(data):
     channel_id = Channel.query.filter_by(name=channel_name).first().id
 
     # Add message to database
-    timestamp = current_user.send_message(message=message, channel_id=channel_id)
+    message_info = current_user.send_message(message=message, channel_id=channel_id)
 
     # Broadcast the message to all users in that channel
-    emit("announce message", {"message": message, "author": current_user.username, "timestamp": timestamp.strftime('%H:%M')}, room=channel_name)
+    emit("announce message", {"message": message, "author": current_user.username, "timestamp": message_info[1].strftime('%H:%M'), "id": message_info[0]}, room=channel_name)
 
 ### JOIN USER TO SELECTED CHANNEL ###
 @socketio.on('join')
@@ -83,6 +83,7 @@ def load_channel_info():
     for message in channel.messages:
         # Initialize a JSON object
         msg = {
+            "id": message.id,
             "message": message.message,
             "author": message.author,
             "timestamp": message.timestamp.strftime('%H:%M')
@@ -138,6 +139,15 @@ def clear_invitation():
     invitation_id = request.form.get("invitation_id")
     invitation = Invitation.query.get(invitation_id)
     db.session.delete(invitation)
+    db.session.commit()
+    return jsonify({"success": True})
+
+### DELETE A MESSAGE ###
+@main_bp.route("/clear_message", methods=["POST"])
+def clear_message():
+    message_id = request.form.get("message_id")
+    message = Message.query.get(message_id)
+    db.session.delete(message)
     db.session.commit()
     return jsonify({"success": True})
 
