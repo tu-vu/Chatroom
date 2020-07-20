@@ -114,23 +114,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // WHEN A NEW MESSAGE IS SENT, DISPLAY IT TO EVERYONE IN CHANNEL
     socket.on("announce message", function(data) {
-        // Create new message tag
-        const p = document.createElement('p');
+        // // Create new message tag
+        // const p = document.createElement('p');
 
-        // Set content of message tag
-        p.innerHTML = data.author + ": " + data.message + " [" + data.timestamp + "]";
+        // // Set content of message tag
+        // p.innerHTML = data.author + ": " + data.message + " [" + data.timestamp + "]";
 
-        // Append new message to messages
-        document.querySelector("#messages").append(p);
+        // // Append new message to messages
+        // document.querySelector("#messages").append(p);
 
-        // Adding delete button for each message
-        const button = document.createElement('button');
+        // // Adding delete button for each message
+        // const button = document.createElement('button');
 
-        //set content of the button
-        button.innerHTML = "[x]";
+        // //set content of the button
+        // button.innerHTML = "[x]";
 
-        // Append the button to the div
-        document.querySelector("#messages").append(button);
+        // // Append the button to the div
+        // document.querySelector("#messages").append(button);
+
+        //Change Demo: create a div message
+        const message =  document.createElement('div');
+        message.setAttribute("class", "container");
+        message.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
+                            <p> ${data.author}: ${data.message}</p>
+                            <button type="button" class="btn btn-danger">x</button>
+                            <span class="time-right">${data.timestamp}</span>`
+        document.querySelector("#messages").append(message);
     });
 
     // REMOVE A MESSAGE (UPDATE THIS IN DATABASE)
@@ -178,7 +187,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 join_channel(channel_name);
 
                 // Add channel to field
-                document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+                // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+                document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
+
             } 
 
             // Clear invitation in database
@@ -207,7 +218,9 @@ function load_channels() {
         // Traverse and print all channels
         for (channel_name of data.channels) {
             // Add channel to field
-            document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+            document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
+
         }
     };
 
@@ -235,12 +248,17 @@ function load_channel_info(channel) {
 
         // Display message history
         for(message of data.messages) {
-            messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+            // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+         messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
+                            <p> ${message.author}: ${message.message}</p>
+                            <button type="button" class="btn btn-danger">x</button>
+                            <span class="time-right">${message.timestamp}</span></div>`;
         }
 
         // Display members of channel
         for(member of data.members) {
-            members.innerHTML += `<li>${member.username}</li>`;
+            // members.innerHTML += `<li>${member.username}</li>`;
+            members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">1</span></li>`;
         }
     };
 
@@ -312,7 +330,8 @@ function add_channel(channel_name) {
         // If creation of new channel is successful
         if(data.success) {
             // Add channel to field
-            document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
+            document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
         } else {
             alert(`Sorry, channel ${channel_name} already exists`);
         }
