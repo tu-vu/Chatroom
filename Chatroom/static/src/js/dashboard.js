@@ -220,7 +220,6 @@ function load_channels() {
             // Add channel to field
             // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
-
         }
     };
 
