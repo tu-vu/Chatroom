@@ -1,80 +1,80 @@
 html, body{
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .window{
-    flex-direction: column;
-    display: flex;
-    height: 100%;
+  flex-direction: column;
+  display: flex;
+  height: 100%;
 }
 
 .header{
-    width: 100%;
-    height: 70px;
-    background-color: #21D4FD;
-    background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    border-top-left-radius: none;
-    border-top-right-radius: none;
-    border-color: black;
-    border-bottom: solid;
-    box-shadow: 0 10px 6px -6px #777;
-    position: absolute;
-    flex-grow: 1;
+  width: 100%;
+  height: 70px;
+  background-color: #21D4FD;
+  background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-left-radius: none;
+  border-top-right-radius: none;
+  border-color: black;
+  border-bottom: solid;
+  box-shadow: 0 10px 6px -6px #777;
+  position: absolute;
+  flex-grow: 1;
 }
 
 .main{
-    flex-grow: 2;
-    margin-top: 72px;
+  flex-grow: 2;
+  margin-top: 72px;
 }
 
 .section{
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
 }
 
 .channelsetting{
-    background: #e5ede6;
-    border-radius: 7px;
-    height: 50px;
-    justify-content: center;
-    padding-left: 39px;
+  background: #e5ede6;
+  border-radius: 7px;
+  height: 50px;
+  justify-content: center;
+  padding-left: 39px;
 }
 
 .formstyle{
-    margin-top: 20px; 
-    margin-left: 20px; 
-    margin-right: 0px;
+  margin-top: 20px; 
+  margin-left: 20px; 
+  margin-right: 0px;
 }
 
 .searchbutton{
-    margin-top: 8px;
-    margin-left: 60px;
-    height: 30px;
-    align-self: center;
-    color:#fff;
-    text-align: center;
+  margin-top: 8px;
+  margin-left: 60px;
+  height: 30px;
+  align-self: center;
+  color:#fff;
+  text-align: center;
 }
 
 .midheader{
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
-    background-color: black;
-    text-align: center;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  background-color: black;
+  text-align: center;
     
 }
 
 .chatbox {
-    height: 70px; 
-    border-top: 3px solid black;
-    background-color: #eee;
+  height: 70px; 
+  border-top: 3px solid black;
+  background-color: #eee;
 }
 
 .button-style{
@@ -192,13 +192,24 @@ html, body{
 }
 
 i{
-    size: 25px;
-    color: grey;
-    transition: .3s;
-    align-self: center;
+  size: 25px;
+  color: grey;
+  transition: .3s;
+  align-self: center;
 }
 
 i:hover {
-    color: blue;
-    cursor: pointer;
+  color: blue;
+  cursor: pointer;
+}
+
+/* FIX THIS: Change color for selected channel */
+.active {
+  background-color: #666;
+  color: white;
+}
+
+/* CHANGE #2: Add a scroll bar to messages */
+#messages {
+  overflow-y: auto;
 }
