@@ -129,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if(targetId.tagName !== "BUTTON") 
             return;
 
-
-
         const container = targetId.parentElement;
         const message = targetId.previousSibling;
         clear_message(message.id);
@@ -226,23 +224,26 @@ function load_channel_info(channel) {
         const members = document.querySelector("#members");
 
         // Reset message history
-        messages.innerHTML = `<h3>Here is messages history for ${channel.innerHTML} </h3>`;
+        messages.innerHTML = `<h3 class="text-center">Here is messages history for ${channel.innerHTML} </h3>`;
 
         // Reset members
         members.innerHTML = "";
 
         // Display message history
         for(message of data.messages) {
-            // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+        // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+
          messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
                             <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
                             <span class="time-right">${message.timestamp}</span></div>`;
         }
 
         // Display members of channel
+        let count = 1;
         for(member of data.members) {
             // members.innerHTML += `<li>${member.username}</li>`;
-            members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">1</span></li>`;
+            members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
+            count++;
         }
     };
 
