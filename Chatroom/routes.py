@@ -47,7 +47,7 @@ def add_message(data):
     message_info = current_user.send_message(message=message, channel_id=channel_id)
 
     # Broadcast the message to all users in that channel
-    emit("announce message", {"message": message, "author": current_user.username, "timestamp": message_info[1].strftime('%H:%M'), "id": message_info[0]}, room=channel_name, broadcast=True)
+    emit("announce message", {"message": message, "author": current_user.username, "timestamp": message_info[1].strftime('%H:%M'), "id": message_info[0]}, broadcast=True)
 
 ### JOIN USER TO SELECTED CHANNEL ###
 @socketio.on('join')
