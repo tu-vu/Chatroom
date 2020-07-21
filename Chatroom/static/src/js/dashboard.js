@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // CONNECT TO WEBSOCKET TO ALLOW FOR REALTIME COMMUNICATION
-    var socket = io.connect("https://messagetastic.herokuapp.com/dashboard");
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
