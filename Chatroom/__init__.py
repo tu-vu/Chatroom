@@ -33,6 +33,6 @@ def create_app():
         
 
         # Close the sql pool connections so that new forks create their own connection.
-        # db.session.remove()
-        # db.engine.dispose()
+        db.session.remove()
+        db.engine.dispose()
         return app
