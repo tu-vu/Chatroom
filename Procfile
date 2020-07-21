@@ -1,1 +1,1 @@
-web: gunicorn wsgi:app --preload
+web: gunicorn --worker-class eventlet -w 1 --pythonpath wsgi:app --preload
