@@ -209,7 +209,7 @@ i:hover {
   color: white;
 }
 
-/* CHANGE #2: Add a scroll bar to messages */
+/* Add a scroll bar to messages */
 #messages {
   overflow-y: auto;
 }

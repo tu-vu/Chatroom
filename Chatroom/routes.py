@@ -49,6 +49,23 @@ def add_message(data):
     # Broadcast the message to all users in that channel
     emit("announce message", {"message": message, "author": current_user.username, "timestamp": message_info[1].strftime('%H:%M'), "id": message_info[0]}, room=channel_name, broadcast=True)
 
+### INVITE ANOTHER USER TO CHANNEL ###
+@main_bp.route("/send_invitation", methods=["POST"])
+def send_invitation(): 
+    username = request.form.get("username")
+    channel_name = request.form.get("channel_name")
+
+    # Check if the user already exists in database
+    existing_user = User.query.filter_by(username=username).first()
+
+    # Send invitation
+    if existing_user:
+        # Create new channel associated with current_user
+        current_user.invite(invitee=username, channel=channel_name)
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False})
+
 ### JOIN USER TO SELECTED CHANNEL ###
 @socketio.on('join')
 def join(data):
@@ -113,25 +130,8 @@ def load_invitations():
                             "channel": invitation.channel,
                             "id": invitation.id
                         })
-
+        
     return jsonify({"invitations": invitations})
-
-### INVITE ANOTHER USER TO CHANNEL ###
-@main_bp.route("/send_invitation", methods=["POST"])
-def send_invitation(): 
-    username = request.form.get("username")
-    channel_name = request.form.get("channel_name")
-
-    # Check if the user already exists in database
-    existing_user = User.query.filter_by(username=username).first()
-
-    # Send invitation
-    if existing_user:
-        # Create new channel associated with current_user
-        current_user.invite(invitee=username, channel=channel_name)
-        return jsonify({"success": True})
-    else:
-        return jsonify({"success": False})
 
 ### CLEAR INVITATION USER HAS ALREADY SELECTED ###
 @main_bp.route("/clear_invitation", methods=["POST"])
