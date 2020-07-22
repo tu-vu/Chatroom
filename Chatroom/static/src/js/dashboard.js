@@ -275,14 +275,14 @@ function load_dashboard() {
 
         // Traverse and print all invitations
         for (invitation of data.invitations) {
-            const cardinvite = document.createElement('div');
-            cardinvite.innerHTML = ` <div class="card card-outline-secondary" style="width: 40%;">
-                                     <div class="card-header cardheader">
-                                     <h2 class="mb-0 text-center white">🅸🅽🆅🅸🆃🅰🆃🅸🅾🅽</h2>
-                                     </div>
-                                     <div class="card-body" style="background-color: #98B4D4;">
-                                     </div>
-                                     </div>`;
+            // const cardinvite = document.createElement('div');
+            // cardinvite.innerHTML = ` <div class="card card-outline-secondary" style="width: 40%;">
+            //                          <div class="card-header cardheader">
+            //                          <h2 class="mb-0 text-center white">🅸🅽🆅🅸🆃🅰🆃🅸🅾🅽</h2>
+            //                          </div>
+            //                          <div class="card-body" style="background-color: #98B4D4;">
+            //                          </div>
+            //                          </div>`;
 
             // Create invitation form 
             const form = document.createElement('form');
@@ -292,27 +292,27 @@ function load_dashboard() {
 
             const notification = `<p style="margin-left: 5%; font-weight: bold; font-family: Times New Roman">User ${invitation.host} invited you to join channel ${invitation.channel} </p>`;
 
-            const bodydiv = document.createElement('div');
+            // const bodydiv = document.createElement('div');
 
-            bodydiv.style.marginLeft = "27%";
+            // bodydiv.style.marginLeft = "27%";
 
             const accept = "<input type='submit' id='accept' value='Accept' class='btn btn-primary'></input>";
 
             const decline = "<input type='submit' id='decline' value='Decline' class='btn btn-danger'></input>";
 
-            bodydiv.append(accept);
+            // bodydiv.append(accept);
 
-            bodydiv.append(decline);
+            // bodydiv.append(decline);
 
-            form.innerHTML += notification + bodydiv;
+            form.innerHTML += notification + accept + decline;
 
-            console.log(form);
-            const formdata = document.getElementsByClassName("card-body");
+             
+            // const formdata = document.getElementsByClassName("card-body");
 
-            formdata.append(form);
+            // formdata.append(form);
 
             // Add button to field
-            dashboard.append(cardinvite);
+            dashboard.append(form);
         }
     };
 
