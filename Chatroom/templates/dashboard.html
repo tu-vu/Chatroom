@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pagestyles %}
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/css/dashboard.css')}}">
 
 {% endblock %}
 
@@ -59,53 +59,89 @@
             <i class="fa fa-file-text w3-xxlarge" style="width: 50px; margin-left: 100px;"></i>
             <form id="new_message" class="form-inline flex-fill">
               <input id="message" type="text" style="border-radius: 10px; border-color: black; outline: none; width: 60%; margin-right: 20px; height: 40px" placeholder="Chat here">
+    <div class="row header">
+        <h3>Logged in as {{ current_user.username }}</h3>
+    </div>
 
-              <!-- CHANGE #1: Replace button with input tag -->
-              <input class="button-style" type="submit" id="send" value="Enter">
-              <i class="fa fa-microphone w3-xxlarge" style="width: 50px;"></i>
-              <i class="fa fa-send w3-xxlarge" style="width: 50px;"></i>
+    <div class="row d-flex flex-row main">
+        <div class="p-2 flex-fill col-2 section" style="background-color: #8EC5FC; background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);" id="left">
+            <div class="channelsetting d-flex flex-row"> 
+                <i class="fa fa-home flex-fill w3-large"></i>
+                <i class="fa fa-trash flex-fill w3-large"></i>
+                <i class="fa fa-bars flex-fill w3-large"></i>
+            </div>
+
+            <form class="form-inline formstyle" id="new_channel">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input class="form-control form-control-sm ml-3 w-75" type="text" id="channel_name" placeholder="Search or Create Channel" aria-label="Find channel" style="border-radius: 15px">
+                <br>
+                <input type="submit" id="create" class="btn btn-primary searchbutton" value="Create">
             </form>
+
+            <hr>
+            <h4 class="text-center"> List of Available Channels </h4>
+            <ol id="channels">
+            </ol>
         </div>
-      </div>
+
+        <div class="section d-flex flex-column" style="width: 60%;" id="mid">
+            <div style="width: 100%; height: 60px;" class="midheader">
+                <img src="https://ihuriro.com/user_img/user.png" alt="Paris" width="50" height="50" style="border-radius: 50px;">
+            </div>    
+
+            <div id="dashboard" style="background-color: #9f99ab" class="text-center"></div>
+
+            <div class = "d-flex flex-column flex-fill" id="messenger">
+                <div class="p-2 bd-highlight" style="height: 700px; background-color: #9f99ab" id="messages">
+                    <p class="text-center" style="color: blue; font-size: 13px"> ______New Messages______ </p>     
+                </div>
+
+                <div class="p-2 flex-fill d-flex flex-row chatbox" style="background-color: #D9AFD9; background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);">
+                    <i class="fa fa-file-text w3-xxlarge" style="width: 50px; margin-left: 50px;"></i>
+                    <form id="new_message" class="form-inline flex-fill">
+                        <input id="message" type="text" style="border-radius: 10px; border-color: black; outline: none; width: 60%; margin-right: 20px; height: 40px" placeholder="Chat here">
+                        <input class="button-style" type="submit" id="send" value="Enter">
+                        <i class="fa fa-microphone w3-xxlarge" style="width: 50px;"></i>
+                        <i class="fa fa-send w3-xxlarge" style="width: 50px;"></i>
+                    </form>
+                </div>
+            </div>
+        </div>
+       </div>
+ 
+        <div class="flex-fill d-flex flex-column section" style="background-color: #8EC5FC; background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);" id="right">
+            <div class="p-2 d-flex flex-row" style="background-color: #e5ede6">
+                <i class="fa fa-bell w3-large flex-fill" style="width: 50px;"></i>
+                <a class="notification text-white">
+                    <span>Inbox</span>
+                    <span class="badge">3</span>
+                </a>
+                <hr>
+            </div>
+
+            <div id="membership" class="d-flex flex-column flex-fill">
+                <div class="p-2 d-flex flex-column" style="height: 95%;">
+                    <p class="text-center"> Invite your friend here </p>
+                    <form style="margin-left: 40px;" id="new_member">
+                        <input type="text" id="username" placeholder="Invite your friend" aria-label="Find channel" style="border-radius: 5px;">
+                        <input type="submit" id="invite" class="btn btn-primary" value="Invite"> 
+                    </form>
+                    <hr>
+
+                    <h4 class="text-center"> Members </h4>
+                    <i class="fa fa-users w3-xxlarge" style="width: 50px; margin-left: 10px; margin-bottom: 5px;"></i>
+                    <ul class="list-group" id="members">
+                    </ul>
+                </div>
+
+                <div class="p-2 bd-highlight d-flex flex-row flex-fill" style="height: 60px; justify-content: center; border-top: 1px solid; background-color: #D9AFD9; background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);">
+                    <form action="{{ url_for('auth_bp.logout') }}"  method="get">
+                        <button  class="btn btn-secondary"><i class="fa fa-sign-out" style="color: white;" aria-hidden="true"></i>Log Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+>>>>>>> 50c50deaecbd59e99acc821949e2cf8d953be3e6
     </div>
-
-    <div class="flex-fill d-flex flex-column section" style="background-color: #8EC5FC; background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);" id="right">
-      <div class="p-2 d-flex flex-row" style="background-color: #e5ede6">
-        <i class="fa fa-bell w3-large flex-fill" style="width: 50px;"></i>
-        <a class="notification text-white">
-          <span>Inbox</span>
-          <span class="badge">3</span>
-        </a>
-        <hr>
-      </div>
-
-      <!-- CHANGE #4: Add membership div -->
-      <div id="membership" class="d-flex flex-column flex-fill">
-        <div class="p-2 d-flex flex-column" style="height: 95%;">
-          <p class="text-center"> Invite your friend here </p>
-          <form style="margin-left: 40px;" id="new_member">
-            <input type="text" id="username" placeholder="Invite your friend"
-            aria-label="Find channel" style="border-radius: 5px;">
-
-            <!-- CHANGE #1: Replace button with input tag -->
-             <input type="submit" id="invite" class="btn btn-primary" value="Invite"> 
-          </form>
-          <hr>
-
-          <h4 class="text-center"> Members </h4>
-          <i class="fa fa-users w3-xxlarge" style="width: 50px; margin-left: 10px; margin-bottom: 5px;"></i>
-          <ul class="list-group" id="members">
-          </ul>
-        </div>
-
-        <div class="p-2 bd-highlight d-flex flex-row flex-fill" style="height: 60px; justify-content: center; border-top: 1px solid; background-color: #D9AFD9;
-          background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);">
-          <form action="{{ url_for('auth_bp.logout') }}"  method="get">
-          <button  class="btn btn-secondary"><i class="fa fa-sign-out" style="color: white;" aria-hidden="true"></i>Log Out</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>   
 {% endblock %}

@@ -30,5 +30,8 @@ def create_app():
 
         # Create Database Models
         db.create_all()
-        
+
+        # Close the sql pool connections so that new forks create their own connection.
+        db.session.remove()
+        db.engine.dispose()
         return app

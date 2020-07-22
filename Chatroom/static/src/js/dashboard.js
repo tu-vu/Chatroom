@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // CONNECT TO WEBSOCKET TO ALLOW FOR REALTIME COMMUNICATION
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port, { transports: ['websocket'] })
+    
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
 
@@ -348,6 +348,70 @@ function add_channel(channel_name) {
     request.send(data);
 }
 
+// LOAD MESSAGE HISTORY OF THE CHANNEL
+function load_channel_info(channel) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open("POST", "/load_channel_info")
+
+    // Callback function when request completes
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        const messages = document.querySelector("#messages");        
+        const members = document.querySelector("#members");
+
+        // Reset message history
+        messages.innerHTML = `<h3 class="text-center">Here is messages history for ${channel.innerHTML} </h3>`;
+
+        // Reset members
+        members.innerHTML = "";
+
+        // Display message history
+        for(message of data.messages) {
+        // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
+
+         messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
+                            <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
+                            <span class="time-right">${message.timestamp}</span></div>`;
+        }
+
+        // Display members of channel
+        let count = 1;
+        for(member of data.members) {
+            // members.innerHTML += `<li>${member.username}</li>`;
+            members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
+            count++;
+        }
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("channel_name", channel.innerHTML);
+
+    // Send request 
+    request.send(data);
+}
+
+// DELETE A MESSAGE
+function clear_message(message) {
+    // Initialize a new request
+    const request = new XMLHttpRequest();
+    request.open('POST', '/clear_message');
+
+    // When the request is loaded successfully
+    request.onload = function() {
+        // Extract JSON data from request
+        const data = JSON.parse(request.responseText);
+    };
+
+    // Add data to send with request
+    const data = new FormData();
+    data.append("message_id", message.substring(1));
+
+    // Send request
+    request.send(data);
+}
+
 // SEND INVITATION TO ANOTHER USER
 function send_invitation(username, channel_name) {
     // Initialize a new request
@@ -376,26 +440,6 @@ function send_invitation(username, channel_name) {
     request.send(data);
 }
 
-// JOIN A CHANNEL 
-function join_channel(channel_name) {
-    // Initialize a new request
-    const request = new XMLHttpRequest();
-    request.open('POST', '/join_channel');
-
-    // When the request is loaded successfully
-    request.onload = function() {
-        // Extract JSON data from request
-        const data = JSON.parse(request.responseText);
-    };
-
-    // Add data to send with request
-    const data = new FormData();
-    data.append("channel_name", channel_name);
-
-    // Send request
-    request.send(data);
-}
-
 // CLEAR INVITATION
 function clear_invitation(invitation) {
     // Initialize a new request
@@ -416,11 +460,11 @@ function clear_invitation(invitation) {
     request.send(data);
 }
 
-// DELETE A MESSAGE
-function clear_message(message) {
+// JOIN A CHANNEL 
+function join_channel(channel_name) {
     // Initialize a new request
     const request = new XMLHttpRequest();
-    request.open('POST', '/clear_message');
+    request.open('POST', '/join_channel');
 
     // When the request is loaded successfully
     request.onload = function() {
@@ -430,7 +474,7 @@ function clear_message(message) {
 
     // Add data to send with request
     const data = new FormData();
-    data.append("message_id", message.substring(1));
+    data.append("channel_name", channel_name);
 
     // Send request
     request.send(data);

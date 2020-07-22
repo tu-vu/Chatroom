@@ -1,64 +1,73 @@
-body,html{
-  height: 100%;
-  width: 100%;
+body,html {
+    height: 100%;
+    width: 100%;
 }
 
 .view{
+<<<<<<< HEAD
   background-image: url("https://clubkendoupc.com/wp-content/uploads/2017/01/search-background-img.jpg");
   height: 100%;
   background-repeat: no-repeat; 
   background-size: cover;
   background-position: center;
   padding: 5% 17%; 
+=======
+    background-image: url("https://clubkendoupc.com/wp-content/uploads/2017/01/search-background-img.jpg");
+    height: 100%;
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    padding: 5% 17%; 
+>>>>>>> 50c50deaecbd59e99acc821949e2cf8d953be3e6
 }
 
 .form-box{
-  display:  flex; 
-  flex-direction: row; 
-  width:  1000px; 
-  height:  600px;  
-  background:  #ffffff; 
-  border-radius: 12px; 
-  border-style: solid;
-  border-width: 10px;
-  border-color: black;
-  box-shadow:  0px 2px 6px -1px rgba(0,0,0,.12);
-  position: relative;
-  padding-left: 0px;
-  overflow: hidden;
+    display:  flex; 
+    flex-direction: row; 
+    width:  1000px; 
+    height:  600px;  
+    background:  #ffffff; 
+    border-radius: 12px; 
+    border-style: solid;
+    border-width: 10px;
+    border-color: black;
+    box-shadow:  0px 2px 6px -1px rgba(0,0,0,.12);
+    position: relative;
+    padding-left: 0px;
+    overflow: hidden;
 }
 
 .left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width:  610px; 
-  height:  auto; 
-  min-height:  100%; 
-  position: absolute; 
-  background-image: url("https://www.nammothaygi.net/wp-content/uploads/2018/10/3027552_mikko_1.jpg");
-  background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:  610px; 
+    height:  auto; 
+    min-height:  100%; 
+    position: absolute; 
+    background-image: url("https://www.nammothaygi.net/wp-content/uploads/2018/10/3027552_mikko_1.jpg");
+    background-size: cover;
 }
 
 .btn1 {
-  border: 2px solid black;
-  background-color: white;
-  color: black;
-  padding: 14px 28px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 /* Green */
 .success {
-  border-color: #4CAF50;
-  color: green;
+    border-color: #4CAF50;
+    color: green;
 }
 
 .success1 {
-  background-color: #4CAF50;
-  color: white;
+    background-color: #4CAF50;
+    color: white;
 }
 
 .newBox {
@@ -69,8 +78,8 @@ body,html{
 }
 
 h1{
-  font-family: taberna;
-  font-weight: bold;
+    font-family: taberna;
+    font-weight: bold;
 }
 
 .inputtype {
@@ -87,7 +96,7 @@ h1{
     transition: 0.25s
 }
 
-.inputtype:focus{
+.inputtype:focus {
     margin-left: 20px;
     width: 250px;
     border-color: #2ecc71
