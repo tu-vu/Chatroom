@@ -231,8 +231,6 @@ function load_channel_info(channel) {
 
         // Display message history
         for(message of data.messages) {
-        // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
-
          messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
                             <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
                             <span class="time-right">${message.timestamp}</span></div>`;
@@ -241,8 +239,7 @@ function load_channel_info(channel) {
         // Display members of channel
         let count = 1;
         for(member of data.members) {
-            // members.innerHTML += `<li>${member.username}</li>`;
-            members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
+             members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
             count++;
         }
     };
@@ -278,22 +275,44 @@ function load_dashboard() {
 
         // Traverse and print all invitations
         for (invitation of data.invitations) {
+            const cardinvite = document.createElement('div');
+            cardinvite.innerHTML = ` <div class="card card-outline-secondary" style="width: 40%;">
+                                     <div class="card-header cardheader">
+                                     <h2 class="mb-0 text-center white">🅸🅽🆅🅸🆃🅰🆃🅸🅾🅽</h2>
+                                     </div>
+                                     <div class="card-body" style="background-color: #98B4D4;">
+                                     </div>
+                                     </div>`;
+
             // Create invitation form 
             const form = document.createElement('form');
             form.id = "i" + invitation.id;
             form.dataset.channel_name = invitation.channel;
-            form.style.backgroundColor = "#5dadec";
+            // form.style.backgroundColor = "#5dadec";
 
-            const notification = `User ${invitation.host} invited you to join channel ${invitation.channel}`;
+            const notification = `<p style="margin-left: 5%; font-weight: bold; font-family: Times New Roman">User ${invitation.host} invited you to join channel ${invitation.channel} </p>`;
 
-            const accept = "<input type='submit' id='accept' value='Accept'></input>";
+            const bodydiv = document.createElement('div');
 
-            const decline = "<input type='submit' id='decline' value='Decline'></input>";
+            bodydiv.style.marginLeft = "27%";
 
-            form.innerHTML += notification + accept + decline
+            const accept = "<input type='submit' id='accept' value='Accept' class='btn btn-primary'></input>";
+
+            const decline = "<input type='submit' id='decline' value='Decline' class='btn btn-danger'></input>";
+
+            bodydiv.append(accept);
+
+            bodydiv.append(decline);
+
+            form.innerHTML += notification + bodydiv;
+
+            console.log(form);
+            const formdata = document.getElementsByClassName("card-body");
+
+            formdata.append(form);
 
             // Add button to field
-            dashboard.append(form);
+            dashboard.append(cardinvite);
         }
     };
 
@@ -315,7 +334,6 @@ function add_channel(channel_name) {
         // If creation of new channel is successful
         if(data.success) {
             // Add channel to field
-            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
         } else {
             alert(`Sorry, channel ${channel_name} already exists`);

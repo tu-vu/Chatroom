@@ -95,7 +95,6 @@ html, body{
   transition: all 0.5s;
 }
 
-
 .button-style span {
   cursor: pointer;
   display: inline-block;
@@ -212,4 +211,9 @@ i:hover {
 /* CHANGE #2: Add a scroll bar to messages */
 #messages {
   overflow-y: auto;
+}
+
+.cardheader {
+  font-size: 30px;
+  background-image: linear-gradient(to right, #5f2c82, #49a09d);
 }
