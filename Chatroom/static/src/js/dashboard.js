@@ -241,9 +241,9 @@ function load_dashboard() {
             form.dataset.channel_name = invitation.channel;
             // form.style.backgroundColor = "#5dadec";
 
-            const notification = `User ${invitation.host} invited you to join channel ${invitation.channel}`;
+            const notification = `<p style="font-size: 24px; font-family: Times New Roman; font-weight: bold;"> User ${invitation.host} invited you to join channel ${invitation.channel} </p>`;
 
-            const accept = "<input type='submit' id='accept' value='Accept'></input>";
+            const accept = "<input type='submit' id='accept' value='Accept' class='btn btn-primary'></input>";
  
             const decline = "<input type='submit' id='decline' value='Decline' class='btn btn-danger'></input>";
 
