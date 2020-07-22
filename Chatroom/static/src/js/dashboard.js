@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // CONNECT TO WEBSOCKET TO ALLOW FOR REALTIME COMMUNICATION
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port, { transports: ['websocket'] })
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
     
     // LOAD ALL CHANNELS ASSOCIATING WITH USER
     load_channels();
@@ -211,47 +211,6 @@ function load_channels() {
     request.send();
 }
 
-// LOAD MESSAGE HISTORY OF THE CHANNEL
-function load_channel_info(channel) {
-    // Initialize a new request
-    const request = new XMLHttpRequest();
-    request.open("POST", "/load_channel_info")
-
-    // Callback function when request completes
-    request.onload = function() {
-        const data = JSON.parse(request.responseText);
-        const messages = document.querySelector("#messages");        
-        const members = document.querySelector("#members");
-
-        // Reset message history
-        messages.innerHTML = `<h3 class="text-center">Here is messages history for ${channel.innerHTML} </h3>`;
-
-        // Reset members
-        members.innerHTML = "";
-
-        // Display message history
-        for(message of data.messages) {
-         messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
-                            <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
-                            <span class="time-right">${message.timestamp}</span></div>`;
-        }
-
-        // Display members of channel
-        let count = 1;
-        for(member of data.members) {
-             members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
-            count++;
-        }
-    };
-
-    // Add data to send with request
-    const data = new FormData();
-    data.append("channel_name", channel.innerHTML);
-
-    // Send request 
-    request.send(data);
-}
-
 // LOAD CONTENT OF DASHBOARD
 function load_dashboard() {
     const dashboard = document.querySelector("#dashboard");
@@ -275,44 +234,22 @@ function load_dashboard() {
 
         // Traverse and print all invitations
         for (invitation of data.invitations) {
-            const cardinvite = document.createElement('div');
-            cardinvite.innerHTML = ` <div class="card card-outline-secondary" style="width: 40%;">
-                                     <div class="card-header cardheader">
-                                     <h2 class="mb-0 text-center white">🅸🅽🆅🅸🆃🅰🆃🅸🅾🅽</h2>
-                                     </div>
-                                     <div class="card-body" style="background-color: #98B4D4;">
-                                     </div>
-                                     </div>`;
-
             // Create invitation form 
             const form = document.createElement('form');
             form.id = "i" + invitation.id;
             form.dataset.channel_name = invitation.channel;
-            // form.style.backgroundColor = "#5dadec";
+            form.style.backgroundColor = "#5dadec";
 
-            const notification = `<p style="margin-left: 5%; font-weight: bold; font-family: Times New Roman">User ${invitation.host} invited you to join channel ${invitation.channel} </p>`;
+            const notification = `User ${invitation.host} invited you to join channel ${invitation.channel}`;
 
-            const bodydiv = document.createElement('div');
+            const accept = "<input type='submit' id='accept' value='Accept'></input>";
 
-            bodydiv.style.marginLeft = "27%";
+            const decline = "<input type='submit' id='decline' value='Decline'></input>";
 
-            const accept = "<input type='submit' id='accept' value='Accept' class='btn btn-primary'></input>";
-
-            const decline = "<input type='submit' id='decline' value='Decline' class='btn btn-danger'></input>";
-
-            bodydiv.append(accept);
-
-            bodydiv.append(decline);
-
-            form.innerHTML += notification + bodydiv;
-
-            console.log(form);
-            const formdata = document.getElementsByClassName("card-body");
-
-            formdata.append(form);
+            form.innerHTML += notification + accept + decline
 
             // Add button to field
-            dashboard.append(cardinvite);
+            dashboard.append(form);
         }
     };
 
@@ -334,6 +271,7 @@ function add_channel(channel_name) {
         // If creation of new channel is successful
         if(data.success) {
             // Add channel to field
+            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
         } else {
             alert(`Sorry, channel ${channel_name} already exists`);
