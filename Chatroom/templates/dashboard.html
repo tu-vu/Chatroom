@@ -14,11 +14,11 @@
 {% block body %}
 <div class="container-fluid window">
     <div class="row header">
-        <h3>Logged in as {{ current_user.username }}</h3>
+        <h3 style="margin-left: 3%">Logged in as <strong>{{ current_user.username }}</strong> <button style="margin-left: 1100px"class="btn btn-secondary"><i class="fa fa-sign-out" style="color: white;" aria-hidden="true"></i><a style="color: white" href="{{ url_for('auth_bp.logout') }}">Log Out</a></button></h3>
     </div>
 
     <div class="row d-flex flex-row main">
-        <div class="p-2 flex-fill col-2 section" style="background-color: #8EC5FC; background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);" id="left">
+        <div class="p-2 flex-fill col-2 section" style="background-color: #8EC5FC; background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%)" id="left">
             <div class="channelsetting d-flex flex-row"> 
                 <i class="fa fa-home flex-fill w3-large"></i>
                 <i class="fa fa-trash flex-fill w3-large"></i>
@@ -85,12 +85,6 @@
                     <i class="fa fa-users w3-xxlarge" style="width: 50px; margin-left: 10px; margin-bottom: 5px;"></i>
                     <ul class="list-group" id="members">
                     </ul>
-                </div>
-
-                <div class="p-2 bd-highlight d-flex flex-row flex-fill" style="height: 60px; justify-content: center; border-top: 1px solid; background-color: #D9AFD9; background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);">
-                    <form action="{{ url_for('auth_bp.logout') }}"  method="get">
-                        <button  class="btn btn-secondary"><i class="fa fa-sign-out" style="color: white;" aria-hidden="true"></i>Log Out</button>
-                    </form>
                 </div>
             </div>
         </div>
