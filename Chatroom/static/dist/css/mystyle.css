@@ -92,3 +92,9 @@ h1{
     width: 250px;
     border-color: #2ecc71
 }
+
+#alert {
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}

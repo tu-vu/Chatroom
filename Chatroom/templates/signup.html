@@ -7,86 +7,86 @@
 {% block title %} Account Login - Messagetastic {% endblock %}
 
 {% block body %}
-<div id="alert">
+<div class="view">
+    <div id="alert">
     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ message }}
         </div>
     {% endfor%}  
-</div>
+    </div>
 
-<div class="view">
-<div class="form-box container-fluid" id="form_box">
-<form action="{{ url_for('auth_bp.signup') }}" method="post" id="signup" class="auth-inner text-center border border-light p-5">
-    <p class="h4 mb-4">Sign Up</p>
-    
-    {{ form.csrf_token }}
+    <div class="form-box container-fluid" id="form_box">
+        <form action="{{ url_for('auth_bp.signup') }}" method="post" id="signup" class="auth-inner text-center border border-light p-5">
+            <p class="h4 mb-4">Sign Up</p>
+            
+            {{ form.csrf_token }}
 
-   <!--  <fieldset class="form-group username"> -->
-        <div class="form-row mb-4">
-        <div class="col">
-        {{ form.username(class="form-control", placeholder = 'John Smith') }}
-        {% if form.username.errors %}
-            <ul class="errors" style="color: red">
-                {% for error in form.username.errors %}
-                    <li>{{  error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        </div>
-        </div>
-    <!-- </fieldset>  --> 
+            <fieldset class="form-group username">
+                <div class="form-row mb-4">
+                    <div class="col">
+                    {{ form.username(class="form-control", placeholder = 'John Smith') }}
+                    {% if form.username.errors %}
+                        <ul class="errors" style="color: red">
+                            {% for error in form.username.errors %}
+                                <li>{{  error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                </div>
+            </fieldset>  
 
-    <!-- <fieldset class="form-group email"> -->
-        {{ form.email(class="form-control mb-4", placeholder='youremail@example.com') }}
-        {% if form.email.errors %}
-            <ul class="errors" style="color: red">
-                {% for error in form.email.errors %}
-                    <li>{{  error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    <!-- </fieldset>  --> 
+            <fieldset class="form-group email">
+                {{ form.email(class="form-control mb-4", placeholder='youremail@example.com') }}
+                {% if form.email.errors %}
+                    <ul class="errors" style="color: red">
+                        {% for error in form.email.errors %}
+                            <li>{{  error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>  
 
-     <!-- <fieldset class="form-group password"> -->
-        {{ form.password(class="form-control", placeholder='Enter password') }}
-        {% if form.password.errors %}
-            <ul class="errors" style="color: red">
-                {% for error in form.password.errors %}
-                    <li>{{  error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-         <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+             <fieldset class="form-group password">
+                {{ form.password(class="form-control", placeholder='Enter password') }}
+                {% if form.password.errors %}
+                    <ul class="errors" style="color: red">
+                        {% for error in form.password.errors %}
+                            <li>{{  error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
                     At least 8 characters and 1 digit
-         </small>
-    <!-- </fieldset>  --> 
+                </small>
+            </fieldset>  
 
-     <!-- <fieldset class="form-group confirm"> -->
-        {{ form.confirm.label }}
-        {{ form.confirm(class="form-control") }}
-        {% if form.confirm.errors %}
-            <ul class="errors" style="color: red">
-                {% for error in form.confirm.errors %}
-                    <li>{{  error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    <!-- </fieldset> -->
+             <fieldset class="form-group confirm">
+                {{ form.confirm.label }}
+                {{ form.confirm(class="form-control") }}
+                {% if form.confirm.errors %}
+                    <ul class="errors" style="color: red">
+                        {% for error in form.confirm.errors %}
+                            <li>{{  error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </fieldset>
 
-    {{ form.submit(class="btn btn-success my-4 btn-block waves-effect waves-light") }}
+            {{ form.submit(class="btn btn-success my-4 btn-block waves-effect waves-light") }}
 
-    <small id="emailHelp" class="form-text text-muted">Already have an account? <a href="{{ url_for('auth_bp.login') }}">Log in.</a></small>
-</form>
+            <small id="emailHelp" class="form-text text-muted">Already have an account? <a href="{{ url_for('auth_bp.login') }}">Log in.</a></small>
+        </form>
 
         <div class="left" id="intro">
-                <h1 style="text-align: center; color: black; margin-top: 150px"> Soccerer </h1>
-                <h4 style="text-align: center; color: black;"> Introduction </h4>
-                <p style="text-align: center; color: black;"> Chat with your friend the way you want </p>
-                <br>
-                <button type="button" class="btn btn-outline-danger" aria-disabled="true" id="button" style="width: 100px"> Manual </button> 
-            </div>
+            <h1 style="text-align: center; color: black; margin-top: 150px"> Messagetastic </h1>
+            <h4 style="text-align: center; color: black;"> Introduction </h4>
+            <p style="text-align: center; color: black;"> Chat with your friend the way you want </p>
+            <br>
+            <button type="button" class="btn btn-outline-danger" aria-disabled="true" id="button" style="width: 100px"> Manual </button> 
         </div>
     </div>
+</div>
 {% endblock %}

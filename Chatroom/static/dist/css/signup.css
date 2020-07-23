@@ -39,3 +39,8 @@ body,html{
     background-image: url("https://www.wallpaperup.com/uploads/wallpapers/2015/02/12/620593/443193d87c60536ecc37c48df31c6a93.jpg");
     background-size: cover;
 }
+#alert {
+  text-align: center;
+  width: 500px;
+  margin: auto;
+}

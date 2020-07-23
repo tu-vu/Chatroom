@@ -171,9 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 join_channel(channel_name);
 
                 // Add channel to field
-                // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
                 document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
-
             } 
 
             // Clear invitation in database
@@ -202,7 +200,6 @@ function load_channels() {
         // Traverse and print all channels
         for (channel_name of data.channels) {
             // Add channel to field
-            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
         }
     };
@@ -239,7 +236,7 @@ function load_dashboard() {
             const form = document.createElement('form');
             form.id = "i" + invitation.id;
             form.dataset.channel_name = invitation.channel;
-            // form.style.backgroundColor = "#5dadec";
+            form.style.backgroundColor = "#5dadec";
 
             const notification = `<p style="font-size: 24px; font-family: Times New Roman; font-weight: bold;"> User ${invitation.host} invited you to join channel ${invitation.channel} </p>`;
 
@@ -272,7 +269,6 @@ function add_channel(channel_name) {
         // If creation of new channel is successful
         if(data.success) {
             // Add channel to field
-            // document.querySelector("#channels").innerHTML += `<button class='channel'>${channel_name}</button>`;
             document.querySelector("#channels").innerHTML += `<li><i class="fa fa-globe w3-large" style="margin-right: 5px;"></i><button type="button" class="btn btn-info btn-rounded">${channel_name}</button></li>`;
         } else {
             alert(`Sorry, channel ${channel_name} already exists`);
@@ -307,8 +303,6 @@ function load_channel_info(channel) {
 
         // Display message history
         for(message of data.messages) {
-        // messages.innerHTML += `<p>${message.author}: ${message.message} [${message.timestamp}]</p><button>[x]</button>`;
-
          messages.innerHTML += `<div class="container darker"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQJBXTe69hsd20PTB3FIeavA0l_5qNf2eFS-w&usqp=CAU" alt="Avatar">
                             <p id=m${message.id}> ${message.author}: ${message.message}</p><button type="button" class="btn btn-danger">x</button>
                             <span class="time-right">${message.timestamp}</span></div>`;
@@ -317,7 +311,6 @@ function load_channel_info(channel) {
         // Display members of channel
         let count = 1;
         for(member of data.members) {
-            // members.innerHTML += `<li>${member.username}</li>`;
             members.innerHTML += `<li class="list-group-item">${member.username}<span class="badge">${count}</span></li>`;
             count++;
         }
