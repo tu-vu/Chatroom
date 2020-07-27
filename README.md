@@ -8,6 +8,8 @@
 ![Socket.IO](https://img.shields.io/badge/Socket.IO-v2.0-blueviolet?logo=socket.io&logoColor=white&style=flat-square)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-v4-563D7C?logo=bootstrap&logoColor=white&style=flat-square)
 
+![Demo](demo.png)
+
 Website found here: https://messagetastic.herokuapp.com/
 
 You can use the following credentials if you don't want to sign up:  
