@@ -32,3 +32,6 @@ You can use the following credentials if you don't want to sign up:
 * `DATABASE_URL`: URI of a SQL database
 * `DEBUG`: Enable/Disable debug mode by setting it to True/False
 * `TESTING`: Enable/Disable testing mode by setting it to True/False
+
+## Collaborator
+* @TenLaGi123
